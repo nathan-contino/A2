@@ -7,8 +7,11 @@
 #include <iostream>
 
 #include "scan.h"
+#include "string"
 
-const char* names[] = {"read", "write", "id", "literal", "gets",
+using namespace std;
+
+const string names[] = {"read", "write", "id", "literal", "gets",
                        "add", "sub", "mul", "div", "lparen", "rparen", "eof"
                         "if", "while", "end", "equals", "notequals", "less", "greater", "lessequals", "greaterequals"};
 
@@ -26,6 +29,7 @@ void match (token expected) {
             std::cout << token_image;
         //std::cout <<  ("\n");
         input_token = scan ();
+        cout << input_token;
     }
     else error (__func__);
 }
