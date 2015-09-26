@@ -1,0 +1,33 @@
+1) I, Nathan Contino (ncontino), am working in a team with Ryan Lee (rlee35).
+
+2) Currently, enum is defined in scan.h as such:
+
+typedef enum {t_read, t_write, t_id, t_literal, t_gets,
+                t_add, t_sub, t_mul, t_div, t_lparen, t_rparen, t_eof} token;
+
+
+This defines types for the read, write, id, literal, gets (assignment operator), addition, subtraction, multiplication, division, left paren, right paren, and end-of-file terminals. However, we're going to have to supplement this a little bit, as below:
+
+typedef enum {t_read, t_write, t_id, t_literal, t_gets,
+                t_add, t_sub, t_mul, t_div, t_lparen, t_rparen, t_eof,
+                t_if, t_while, t_end, t_equals, t_notequals, t_less, t_greater, t_lessequals, t_greaterequals} token;
+
+As you can see, we've added definitions for a few extra tokens: if, while, end, (==), (!=), (<), (>), (<=), (>=). 
+In this assignment, we're tasked not only with implementing proper error messages for the grammar, but also with extending the grammar. This requires us to modify the grammar defined within the source files to match the grammar defined on the assignment 2 webpage, which added exactly those operators to the LL(1) grammar for the language.
+
+3) The C++ version of 
+		
+		printf("%d + %d = %d\n", a, b, a+b);
+
+	is:
+
+		std::cout << a << " + " << b << " = " << a + b << std::endl;
+
+	NOTE: "std::" doesn't seem to be entirely necessary, but it's likely better safe than sorry in this case. "cout <<" is the important part.
+
+
+4) Figure 1.5, linear parenthesized form:
+
+
+(translation-unit (function-definition (declaration specifiers (type-specifier int) (declaration-specifiers_opt EPSILON)) (declarator (pointer_opt EPSILON) (direct-declarator (direct-declarator ident(main)) LEFT_PAREN (identifier-list_opt EPSILON) RIGHT PAREN)) (delcaration-list_opt EPSILON) (compound-statement LEFT_BRACKET (block-item-list_opt (block-item-list (block-item-list (block-item-list (declaration (declaration-specifiers (type-specifier int) (declaration-specifiers_opt  EPSILON)) (init-declarator-list_opt (init-declarator-list (init-declarator-list (init-declarator (declarator (pointer_opt EPSILON) (direct-declarator ident(i))) EQUALS (initializer (assignment-expression (postfix-expresssion (postfix-expression ident(getint)) LEFT_PAREN (argument-expression-list_opt EPSILON) RIGHT_PAREN)))) COMMA (init-declarator (declarator (pointer_opt EPSILON) (direct-declarator ident(j))) EQUALS (initializer (assignment-expression (postfix-expression (postfix-expression ident(getint)) LEFT_PAREN (argument-expression-list_opt EPSILON) RIGHT_PAREN)))))) SEMICOLON)) (block-item (statement (iteration-statement WHILE LEFT_PAREN (expression (equality-expression (equality-expression ident(i)) NOTEQUALS (relational-expression ident(j)))) RIGHT_PAREN (statement (compound-statement LEFT_BRACKET (block-item-list_opt (selection-statement IF LEFT_PAREN (expression (relational-expression (relational-expression ident(i)) GREATER (shift-expression ident(j)))) RIGHT PAREN (statement (expression-statement (expression-opt (assignment-expression (unary-expression ident(i)) (assignment-operator EQUALS) (assignment-expression (additive-expression (additive-expression ident(i)) MINUS (multiplicative-expression ident(j)))))) SEMICOLON)) ELSE (statement (expression-statement (expression-opt (assignment-expression (unary-expression ident(j)) (assignment-operator EQUALS) (assignment-expression (additive-expression (additive-expression ident(j)) MINUS (multiplicative-expression ident(i)))))) SEMICOLON)))) RIGHT_BRACKET)))))) (block-item (statement (expression-statement (expression_opt (postfix-expression (postfix-expression ident(putint)) LEFT_PAREN (argument-expression-list_opt ident(i)) RIGHT_PAREN)) SEMICOLON)))))) RIGHT_BRACKET)))
+
