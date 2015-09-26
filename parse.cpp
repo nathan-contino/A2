@@ -26,7 +26,10 @@ void match (token expected) {
         if (input_token == t_id || input_token == t_literal);
             //std::cout << token_image;
         //std::cout <<  ("\n");
-        input_token = scan ();
+        input_token = scan();
+        if(input_token == t_error)
+            error("errorA");
+
     }
     else error (__func__);
 }
@@ -319,6 +322,8 @@ void rel_op () {
 }
 
 int main () {
-    input_token = scan ();
+    input_token = scan();
+    if(input_token == t_error)
+        error("errorB");
     program ();
 }

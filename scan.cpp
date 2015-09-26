@@ -23,9 +23,9 @@ token scan() {
 	if (isalpha(c)) {
 		do {
 			token_image += c;
-			cin >> c;
+			cin >> noskipws >> c;
 		} while (isalpha(c) || isdigit(c) || c == '_');
-		//token_image[i] = '\0';
+				//token_image[i] = '\0';
 		if (!token_image.compare("read")) return t_read;
 		else if (!token_image.compare("write")) return t_write;
 		else if (!token_image.compare("if")) return t_if;
@@ -36,13 +36,13 @@ token scan() {
 	else if (isdigit(c)) {
 		do {
 			token_image[i++] = c;
-			cin >> c;
+			cin >> noskipws >> c;
 		} while (isdigit(c));
 		//token_image[i] = '\0';
 		return t_literal;
 	} else switch (c) {
 		case ':':
-            cin >> c;
+            cin >> noskipws >> c;
 			if (c != '=') {
 				cout << cerr << "error\n";
 				return t_error;
@@ -52,7 +52,7 @@ token scan() {
 			}
 			break;
 		case '!':
-            cin >> c;
+            cin >> noskipws >> c;
 			if (c != '=') {
 				cout << cerr << "error\n";
 				return t_error;
@@ -62,7 +62,7 @@ token scan() {
 			}
 			break;
 		case '=':
-            cin >> c;
+            cin >> noskipws >> c;
 			if (c != '=') {
 				cout << cerr << "error\n";
 				return t_error;
@@ -72,7 +72,7 @@ token scan() {
 			}
 			break;
 		case '>':
-            cin >> c;
+            cin >> noskipws >> c;
 			if (c != '=') {
 				if (c == ' ') return t_greater;
 				cout << cerr << "error\n";
@@ -83,7 +83,7 @@ token scan() {
 			}
 			break;
 		case '<':
-            cin >> c;
+            cin >> noskipws >> c;
 			if (c != '=') {
 				if (c == ' ') return t_less;
 				cout << cerr << "error\n";
@@ -93,12 +93,12 @@ token scan() {
 				return t_lessequals;
 			}
 			break;
-		case '+': cin >> c; return t_add;
-		case '-': cin >> c; return t_sub;
-		case '*': cin >> c; return t_mul;
-		case '/': cin >> c; return t_div;
-		case '(': cin >> c; return t_lparen;
-		case ')': cin >> c; return t_rparen;
+		case '+': cin >> noskipws >> c; return t_add;
+		case '-': cin >> noskipws >> c; return t_sub;
+		case '*': cin >> noskipws >> c; return t_mul;
+		case '/': cin >> noskipws >> c; return t_div;
+		case '(': cin >> noskipws >> c; return t_lparen;
+		case ')': cin >> noskipws >> c; return t_rparen;
 		default:
 			cout << "error\n";
 			return t_error;
