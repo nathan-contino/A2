@@ -5,7 +5,8 @@
 */
 
 #include <iostream>
-
+#include <cstdio>
+#include <cstdlib>
 #include "scan.h"
 
 const char* names[] = {"read", "write", "id", "literal", "gets",
@@ -16,14 +17,14 @@ static token input_token;
 
 void error (std::string method_name) {
     std::cout <<  "syntax error in " << method_name << "\n";
-    exit (1);
+    exit(1);
 }
 
 void match (token expected) {
     if (input_token == expected) {
         //std::cout << names[input_token];
-        if (input_token == t_id || input_token == t_literal)
-            std::cout << token_image;
+        if (input_token == t_id || input_token == t_literal);
+            //std::cout << token_image;
         //std::cout <<  ("\n");
         input_token = scan ();
     }
