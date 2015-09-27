@@ -23,9 +23,11 @@ void error (std::string method_name) {
 
 void match (token expected) {
     if (input_token == expected) {
-        std::cout << names[input_token];
-        if (input_token == t_id || input_token == t_literal)
-            std::cout << " " << token_image;
+        if (input_token == t_id || input_token == t_literal) {
+            std::cout << "(" << names[input_token] << " " << token_image << ")";   
+        }
+        else 
+            std::cout << names[input_token];
         input_token = scan();
         if(input_token == t_error)
             error("errorA");
