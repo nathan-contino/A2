@@ -6,11 +6,11 @@
 #include "scan.h"
 
 
+std::string token_image;
 token scan() {
 	//
 	using namespace std;
- 
-    string token_image;
+ 	token_image = "";
 	static char c = ' ';
 		/* next available char; extra (int) width accommodates EOF */
 	int i = 0;			  /* index into token_image */

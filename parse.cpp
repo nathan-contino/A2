@@ -9,9 +9,10 @@
 #include <cstdlib>
 #include "scan.h"
 
-const char* names[] = {"read", "write", "id ", "literal", "gets ",
-                       "add", "sub", "mul", "div", "lparen", "rparen", "eof",
-                        "if", "while", "end ", "equals", "notequals", "less", "greater", "lessequals", "greaterequals", "error"};
+const char* names[] = {"read", "write", "id", "literal", "gets",
+                        "add", "sub", "mul", "div", "lparen", "rparen", "eof",
+                        "if", "while", "end", "equals", "notequals", "less",
+                        "greater", "lessequals", "greaterequals", "error"};
 
 static token input_token;
 
@@ -23,8 +24,8 @@ void error (std::string method_name) {
 void match (token expected) {
     if (input_token == expected) {
         std::cout << names[input_token];
-        //if (input_token == t_id || input_token == t_literal)
-            //std::cout << token_image;
+        if (input_token == t_id || input_token == t_literal)
+            std::cout << " " << token_image;
         input_token = scan();
         if(input_token == t_error)
             error("errorA");
@@ -77,7 +78,7 @@ void stmt_list () {
             break;
         case t_end:
         case t_eof:
-            std::cout <<  " () ";//("predict stmt_list --> epsilon\n");
+            std::cout <<  " ()";//("predict stmt_list --> epsilon\n");
             break;          /*  epsilon production */
         default: error (__func__);
     }
