@@ -44,6 +44,7 @@ const char* first_mul_op[] = {"mul", "div"};
 static token input_token;
 
 void error (std::string method_name) {
+    std::cout << "\nerror" << method_name << "\n";
     //std::cout <<  "syntax error in " << method_name << "\n";
     // std::exit(1);
 }
@@ -63,15 +64,13 @@ void match (token expected) {
         }
     }
     else {
-        error("errorC");
-        std::exit(1);
         //insert the token
-        // if (input_token == t_literal)
-        //     std::cout << "(" << names[t_literal] << " 1)";   
-        // else if(input_token == t_id)
-        //     std::cout << "IDinsertion";
-        // else 
-        //     std::cout << names[input_token];
+        if (input_token == t_literal)
+            std::cout << "(" << name[t_literal] << " 1)";   
+        else if(input_token == t_id)
+            std::cout << "IDinsertion";//this part fuck if i know
+        else 
+            std::cout << name[expected];
     }
 }
 
@@ -119,26 +118,23 @@ void stmt_list () {
                 stmt ();
                 stmt_list ();
                 std::cout << ") ";
-                break;
-            case t_end:
-            case t_eof:
-                std::cout <<  "()";//("predict stmt_list --> epsilon\n");
-                break;          /*  epsilon production */
+                return;
             default:
                 throw(1);
         }
     }
     catch(int e) {
         while(1) {
+            if(std::find(std::begin(follow_stmt_list), std::end(follow_stmt_list), name[input_token]) != std::end(follow_stmt_list)) {
+                return;
+            }
+            
+            input_token = scan();
+
             if(std::find(std::begin(first_stmt_list), std::end(first_stmt_list), name[input_token]) != std::end(first_stmt_list)) {
-                program();
+                stmt_list();
                 return;
             }
-            else if(std::find(std::begin(follow_stmt_list), std::end(follow_stmt_list), name[input_token]) != std::end(follow_stmt_list)) {
-                return;
-            }
-            else
-                input_token = scan();
         }
     }
 }
@@ -197,9 +193,9 @@ void cmpr () {
                 expr ();
                 std::cout << ") ";
                 break;
-            default: error (__func__);
+            default: 
                 input_token = scan();
-                cmpr();
+                throw(1);
         }
     }
     catch(int e) {
@@ -214,15 +210,15 @@ void cmpr () {
     }
 }
 
-void expr () {
+void expr() {
     try {
         switch (input_token) {
             case t_id:
             case t_literal:
             case t_lparen:
                 std::cout <<  "(expr ";//("predict expr --> term term_tail\n");
-                term ();
-                term_tail ();
+                term();
+                term_tail();
                 std::cout << ") ";
                 break;
             default:
@@ -242,49 +238,34 @@ void expr () {
     }
 }
 
-void term_tail () {
+void term_tail() {
     try {
         switch (input_token) {
             case t_add:
             case t_sub:
                 std::cout <<  "(term_tail ";//("predict term_tail --> add_op term term_tail\n");
-                add_op ();
-                term ();
-                term_tail ();
+                add_op();
+                term();
+                term_tail();
                 std::cout << ") ";
                 break;
-            case t_rparen:
-            case t_id:
-            case t_read:
-            case t_write:
-            case t_if:
-            case t_while:
-            case t_end:
-            case t_equals:
-            case t_notequals:
-            case t_less:
-            case t_greater:
-            case t_lessequals:
-            case t_greaterequals:
-            case t_eof:
-                std::cout <<  "()";//("predict term_tail --> epsilon\n");
-                break;          /*  epsilon production */
             default:
-                input_token = scan();
                 throw(1);
         }
     }
     catch (int e) {
         while(1) {
+            if(std::find(std::begin(follow_term_tail), std::end(follow_term_tail), name[input_token]) != std::end(follow_term_tail)) {
+                return;
+            }
+             
+            input_token = scan();
+
+
             if(std::find(std::begin(first_term_tail), std::end(first_term_tail), name[input_token]) != std::end(first_term_tail)) {
                 term_tail();
                 return;
             }
-            else if(std::find(std::begin(follow_term_tail), std::end(follow_term_tail), name[input_token]) != std::end(follow_term_tail)) {
-                return;
-            }
-            else
-                input_token = scan();
         }
     }
 }
@@ -328,65 +309,60 @@ void factor_tail () {
                 factor_tail();
                 std::cout << ") ";
                 break;
-            case t_add:
-            case t_sub:
-            case t_rparen:
-            case t_id:
-            case t_read:
-            case t_if:
-            case t_while:
-            case t_end:
-            case t_write:
-            case t_equals:
-            case t_notequals:
-            case t_less:
-            case t_greater:
-            case t_lessequals:
-            case t_greaterequals:
-            case t_eof:
-                std::cout <<  "()";//("predict factor_tail --> epsilon\n");
-                break;          /*  epsilon production */
             default:
-                input_token = scan();
                 throw(1);
         }
     }
     catch (int e) {
         while(1) {
+            if(std::find(std::begin(follow_factor_tail), std::end(follow_factor_tail), name[input_token]) != std::end(follow_factor_tail)) {
+                return;
+            }
+
+            input_token = scan();
+
             if(std::find(std::begin(first_factor_tail), std::end(first_factor_tail), name[input_token]) != std::end(first_factor_tail)) {
                 factor_tail();
                 return;
             }
-            else if(std::find(std::begin(follow_factor_tail), std::end(follow_factor_tail), name[input_token]) != std::end(follow_factor_tail)) {
-                return;
-            }
-            else
-                input_token = scan();
         }
     }
 }
 
 void factor() {
-    switch (input_token) {
-        case t_id :
-            std::cout <<  "(factor ";//("predict factor --> id\n");
-            match (t_id);
-            std::cout << ") ";
-            break;
-        case t_literal:
-            std::cout <<  "(factor ";//("predict factor --> literal\n");
-            match (t_literal);
-            std::cout << ") ";
-            break;
-        case t_lparen:
-            std::cout <<  "(factor ";//("predict factor --> lparen expr rparen\n");
-            match (t_lparen);
-            expr ();
-            match (t_rparen);
-            std::cout << ") ";
-            break;
-        default: 
-            throw(1);
+    try {
+        switch (input_token) {
+            case t_id :
+                std::cout <<  "(factor ";//("predict factor --> id\n");
+                match (t_id);
+                std::cout << ") ";
+                break;
+            case t_literal:
+                std::cout <<  "(factor ";//("predict factor --> literal\n");
+                match (t_literal);
+                std::cout << ") ";
+                break;
+            case t_lparen:
+                std::cout <<  "(factor ";//("predict factor --> lparen expr rparen\n");
+                match (t_lparen);
+                expr ();
+                match (t_rparen);
+                std::cout << ") ";
+                break;
+            default: 
+                input_token = scan();
+                throw(1);
+        }
+    }
+    catch(int e) {
+        while(1) {
+            if(std::find(std::begin(first_factor), std::end(first_factor), name[input_token]) != std::end(first_factor)) {
+                factor();
+                return;
+            }
+            else
+                input_token = scan();
+        }
     }
 }
 
@@ -425,39 +401,52 @@ void mul_op () {
 }
 
 void rel_op () {
-    switch (input_token) {
-        case t_equals:
-            std::cout <<  "(rel_op ";//("predict rel_op --> equals\n");
-            match (t_equals);
-            std::cout << ") ";
-            break;
-        case t_notequals:
-            std::cout <<  "(rel_op ";//("predict rel_op --> notequals\n");
-            match (t_notequals);
-            std::cout << ") ";
-            break;
-        case t_lessequals:
-            std::cout <<  "(rel_op ";//("predict rel_op --> lessequals\n");
-            match (t_lessequals);
-            std::cout << ") ";
-            break;
-        case t_greaterequals:
-            std::cout <<  "(rel_op ";//("predict rel_op --> greaterequals\n");
-            match (t_greaterequals);
-            std::cout << ") ";
-            break;
-        case t_greater:
-            std::cout <<  "(rel_op ";//("predict rel_op --> greater\n");
-            match (t_greater);
-            std::cout << ") ";
-            break;
-        case t_less:
-            std::cout <<  "(rel_op ";//("predict rel_op --> less\n");
-            match (t_less);
-            std::cout << ") ";
-            break;
-        default: 
-            throw(1);
+    try {
+        switch (input_token) {
+            case t_equals:
+                std::cout <<  "(rel_op ";//("predict rel_op --> equals\n");
+                match (t_equals);
+                std::cout << ") ";
+                break;
+            case t_notequals:
+                std::cout <<  "(rel_op ";//("predict rel_op --> notequals\n");
+                match (t_notequals);
+                std::cout << ") ";
+                break;
+            case t_lessequals:
+                std::cout <<  "(rel_op ";//("predict rel_op --> lessequals\n");
+                match (t_lessequals);
+                std::cout << ") ";
+                break;
+            case t_greaterequals:
+                std::cout <<  "(rel_op ";//("predict rel_op --> greaterequals\n");
+                match (t_greaterequals);
+                std::cout << ") ";
+                break;
+            case t_greater:
+                std::cout <<  "(rel_op ";//("predict rel_op --> greater\n");
+                match (t_greater);
+                std::cout << ") ";
+                break;
+            case t_less:
+                std::cout <<  "(rel_op ";//("predict rel_op --> less\n");
+                match (t_less);
+                std::cout << ") ";
+                break;
+            default:
+                input_token = scan();
+                throw(1);
+        }
+    }
+    catch(int e) {
+        while(1) {
+            if(std::find(std::begin(first_rel_op), std::end(first_rel_op), name[input_token]) != std::end(first_rel_op)) {
+                rel_op();
+                return;
+            }
+            else
+                input_token = scan();
+        }
     }
 }
 
