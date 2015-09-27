@@ -5,8 +5,6 @@
 */
 
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 #include "scan.h"
 
 const char* names[] = {"read", "write", "id", "literal", "gets",
@@ -18,7 +16,7 @@ static token input_token;
 
 void error (std::string method_name) {
     std::cout <<  "syntax error in " << method_name << "\n";
-    exit(1);
+    std::exit(1);
 }
 
 void match (token expected) {
@@ -59,8 +57,8 @@ void program () {
         case t_eof:
             std::cout <<  "(program ";//("predict program --> stmt_list eof\n");
             stmt_list ();
-            std::cout << ")\n ";
             match (t_eof);
+            std::cout << ")\n ";
             break;
         default: error (__func__);
     }
