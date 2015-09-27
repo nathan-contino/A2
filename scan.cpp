@@ -7,6 +7,7 @@
 
 
 token scan() {
+	//
 	using namespace std;
  
     string token_image;
@@ -15,16 +16,18 @@ token scan() {
 	int i = 0;			  /* index into token_image */
 
 	/* skip white space */
-	while (isspace(c)) {
-		cin >> c;
+	while (isspace(c) && !cin.eof()) {
+		cin >> noskipws >> c;
 	}
-	if (cin.eof())
+
+	if (cin.eof()) {
 		return t_eof;
-	if (isalpha(c)) {
+	}
+	else if (isalpha(c)) {
 		do {
 			token_image += c;
 			cin >> noskipws >> c;
-		} while (isalpha(c) || isdigit(c) || c == '_');
+		} while ((isalpha(c) || isdigit(c) || c == '_') && !cin.eof());
 				//token_image[i] = '\0';
 		if (!token_image.compare("read")) return t_read;
 		else if (!token_image.compare("write")) return t_write;
@@ -35,7 +38,7 @@ token scan() {
 	}
 	else if (isdigit(c)) {
 		do {
-			token_image[i++] = c;
+			token_image += c;
 			cin >> noskipws >> c;
 		} while (isdigit(c));
 		//token_image[i] = '\0';
@@ -47,7 +50,7 @@ token scan() {
 				cout << cerr << "error\n";
 				return t_error;
 			} else {
-				cin >> c;;
+				cin >> noskipws >> c;;
 				return t_gets;
 			}
 			break;
@@ -57,7 +60,7 @@ token scan() {
 				cout << cerr << "error\n";
 				return t_error;
 			} else {
-				cin >> c;
+				cin >> noskipws >> c;
 				return t_notequals;
 			}
 			break;
@@ -67,7 +70,7 @@ token scan() {
 				cout << cerr << "error\n";
 				return t_error;
 			} else {
-				cin >> c;
+				cin >> noskipws >> c;
 				return t_equals;
 			}
 			break;
@@ -78,7 +81,7 @@ token scan() {
 				cout << cerr << "error\n";
 				return t_error;
 			} else {
-				cin >> c;
+				cin >> noskipws >> c;
 				return t_greaterequals;
 			}
 			break;
@@ -89,7 +92,7 @@ token scan() {
 				cout << cerr << "error\n";
 				return t_error;
 			} else {
-				cin >> c;
+				cin >> noskipws >> c;
 				return t_lessequals;
 			}
 			break;
