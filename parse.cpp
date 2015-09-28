@@ -12,34 +12,36 @@ const char* name[] = {"read", "write", "id", "literal", "gets",
                         "if", "while", "end", "equals", "notequals", "less",
                         "greater", "lessequals", "greaterequals", "error"};
 
-const char* follow_stmt_list[] = {"eof"};
-const char* first_stmt_list[] = {"id", "read", "write", "if", "while"};
-const char* follow_stmt[] = {"id", "read", "write", "if", "while", "end"};
-const char* first_stmt[] = {"id", "read", "write", "if", "while"};
-const char* follow_cmpr[] = {"id", "read", "write", "if", "while", "end"};
-const char* first_cmpr[] = {"lparen", "id", "lit"};
-const char* follow_expr[] = {"lparen", "equals", "notequals", "less", "greater", "lessequals",
-                                "greaterequals", "id", "read", "write", 
-                                "if", "while", "end", "eof"};
-const char* first_expr[] = {"lparen", "id", "lit"};
-const char* follow_term[] = {"add", "sub", "id", "read", "write", "if", "while", "eof"};
-const char* first_term[] = {"lparen", "id", "lit"};
-const char* follow_term_tail[] = {"equals", "notequals", "less", "greater", "lessequals", "greaterequals",
-                                    "id", "read", "write", "if", "while", "end", "eof"};
-const char* first_term_tail[] = {"add", "sub"};
-const char* follow_factor[] = {"lparen", "equals", "notequals", "less", "greater", "lessequals",
-                                "greaterequals", "id", "read", "write", "if", "while", "end",
-                                "eof", "mul", "div", "add", "sub"};
-const char* first_factor[] = {"lparen", "id", "lit"};
-const char* follow_factor_tail[] = {"add", "sub", "equals", "notequals", "less", "greater", "lessequals",
-                                    "greaterequals", "id", "read", "write", "if", "while", "end", "eof"};
-const char* first_factor_tail[] = {"mul", "div"}; 
-const char* follow_rel_op[] = {"lparen", "id", "lit"};
-const char* first_rel_op[] = {"equals", "notequals", "greater", "less", "greaterequals", "lessequals"};
-const char* follow_add_op[] = {"lparen", "id", "lit"};
-const char* first_add_op[] = {"add", "sub"};
-const char* follow_mul_op[] = {"lparen", "id", "lit"};
-const char* first_mul_op[] = {"mul", "div"};
+token only_eof[] = {t_eof};
+token only_end[] = {t_end};
+token follow_stmt_list[] = {t_end, t_eof};
+token first_stmt_list[] = {t_id, t_read, t_write, t_if, t_while};
+token follow_stmt[] = {t_id, t_read, t_write, t_if, t_while, t_end};
+token first_stmt[] = {t_id, t_read, t_write, t_if, t_while};
+token follow_cmpr[] = {t_id, t_read, t_write, t_if, t_while, t_end};
+token first_cmpr[] = {t_lparen, t_id, t_literal};
+token follow_expr[] = {t_lparen, t_equals, t_notequals, t_less, t_greater, t_lessequals,
+                                t_greaterequals, t_id, t_read, t_write, 
+                                t_if, t_while, t_end, t_eof};
+token first_expr[] = {t_lparen, t_id, t_literal};
+token follow_term[] = {t_add, t_sub, t_id, t_read, t_write, t_if, t_while, t_eof};
+token first_term[] = {t_lparen, t_id, t_literal};
+token follow_term_tail[] = {t_equals, t_notequals, t_less, t_greater, t_lessequals, t_greaterequals,
+                                    t_id, t_read, t_write, t_if, t_while, t_end, t_eof};
+token first_term_tail[] = {t_add, t_sub};
+token follow_factor[] = {t_lparen, t_equals, t_notequals, t_less, t_greater, t_lessequals,
+                                t_greaterequals, t_id, t_read, t_write, t_if, t_while, t_end,
+                                t_eof, t_mul, t_div, t_add, t_sub};
+token first_factor[] = {t_lparen, t_id, t_literal};
+token follow_factor_tail[] = {t_add, t_sub, t_equals, t_notequals, t_less, t_greater, t_lessequals,
+                                    t_greaterequals, t_id, t_read, t_write, t_if, t_while, t_end, t_eof};
+token first_factor_tail[] = {t_mul, t_div}; 
+token follow_rel_op[] = {t_lparen, t_id, t_literal};
+token first_rel_op[] = {t_equals, t_notequals, t_greater, t_less, t_greaterequals, t_lessequals};
+token follow_add_op[] = {t_lparen, t_id, t_literal};
+token first_add_op[] = {t_add, t_sub};
+token follow_mul_op[] = {t_lparen, t_id, t_literal};
+token first_mul_op[] = {t_mul, t_div};
 
 static token input_token;
 std::string parse_tree;
@@ -87,17 +89,26 @@ std::string match (token expected) {
 }
 
 std::string program();
-std::string stmt_list();
+std::string stmt_list(token cs_follow[]);
 std::string stmt();
 std::string expr();
 std::string cmpr();
-std::string term_tail(std::string Term);
+std::string term_tail(std::string Term, token cs_follow[]);
 std::string term();
-std::string factor_tail(std::string Factor);
+std::string factor_tail(std::string Factor, token cs_follow[]);
 std::string factor();
 std::string rel_op();
 std::string add_op();
 std::string mul_op();
+
+int find(token t, token list[]) {
+    int i = 0;
+    while(list[i]) {
+        if(t == list[i])
+            return 1;
+    }
+    return 0;
+}
 
 std::string program () {
     std::string P = "(program";
@@ -109,7 +120,7 @@ std::string program () {
         case t_while:
         case t_eof:
             parse_tree = "(program";//("predict program --> stmt_list eof\n");
-            P += stmt_list();
+            P += stmt_list(only_eof);
             P += match(t_eof);
             P += ")\n";
             parse_tree += ")\n ";
@@ -121,7 +132,7 @@ std::string program () {
     return P;
 }
 
-std::string stmt_list() {
+std::string stmt_list(token cs_follow[]) {
     std::string SL = " (";
     try {
         switch (input_token) {
@@ -133,7 +144,7 @@ std::string stmt_list() {
             case t_write:
                 parse_tree +=  "(stmt_list ";//("predict stmt_list --> stmt stmt_list\n");
                 SL += stmt();
-                SL += stmt_list() + ")";
+                SL += stmt_list(cs_follow) + ")";
                 parse_tree += ") ";
                 return SL;
             //not in first
@@ -145,7 +156,7 @@ std::string stmt_list() {
     catch(int e) {
         while(1) {
             //check in follow (can be context sensative)
-            if(std::find(std::begin(follow_stmt_list), std::end(follow_stmt_list), name[input_token]) != std::end(follow_stmt_list)) {
+            if(find(input_token, cs_follow)) {
                 parse_tree += "() ";
                 return "";
             }
@@ -154,8 +165,8 @@ std::string stmt_list() {
             input_token = scan();
 
             //check if in first
-            if(std::find(std::begin(first_stmt_list), std::end(first_stmt_list), name[input_token]) != std::end(first_stmt_list)) {
-                return stmt_list();
+            if(std::find(std::begin(first_stmt_list), std::end(first_stmt_list), input_token) != std::end(first_stmt_list)) {
+                return stmt_list(cs_follow);
             }
         }
     }
@@ -187,7 +198,7 @@ std::string stmt () {
             parse_tree +=  "(stmt ";//("predict stmt --> if expr\n");
             S = match(t_if) + " ";
             S += cmpr();
-            S += stmt_list();
+            S += stmt_list(only_end);
             match(t_end);
             parse_tree += ") ";
             return S;
@@ -195,7 +206,7 @@ std::string stmt () {
             parse_tree +=  "(stmt ";//("predict stmt --> while expr\n");
             S = match(t_while) + " ";
             S += cmpr();
-            S += stmt_list(); 
+            S += stmt_list(only_end); 
             match(t_end);
             parse_tree += ") ";
             return S;
@@ -225,7 +236,7 @@ std::string cmpr() {
     }
     catch(int e) {
         while(1) {
-            if(std::find(std::begin(first_cmpr), std::end(first_cmpr), name[input_token]) != std::end(first_cmpr)) {
+            if(std::find(std::begin(first_cmpr), std::end(first_cmpr), input_token) != std::end(first_cmpr)) {
                 return cmpr();
             }
             else
@@ -253,7 +264,7 @@ std::string expr() {
     }
     catch (int e) {
         while(1) {
-            if(std::find(std::begin(first_expr), std::end(first_expr), name[input_token]) != std::end(first_expr)) {
+            if(std::find(std::begin(first_expr), std::end(first_expr), input_token) != std::end(first_expr)) {
                 return expr();
             }
             else
@@ -262,7 +273,7 @@ std::string expr() {
     }
 }
 
-std::string term_tail(std::string Term) {
+std::string term_tail(std::string Term, token cs_follow[]) {
     std::string TT;
     try {
         switch (input_token) {
@@ -280,7 +291,7 @@ std::string term_tail(std::string Term) {
     }
     catch (int e) {
         while(1) {
-            if(std::find(std::begin(follow_term_tail), std::end(follow_term_tail), name[input_token]) != std::end(follow_term_tail)) {
+            if(std::find(std::begin(follow_term_tail), std::end(follow_term_tail), input_token) != std::end(follow_term_tail)) {
                 parse_tree += "() ";
                 return Term;
             }
@@ -288,7 +299,7 @@ std::string term_tail(std::string Term) {
             input_token = scan();
 
 
-            if(std::find(std::begin(first_term_tail), std::end(first_term_tail), name[input_token]) != std::end(first_term_tail)) {
+            if(std::find(std::begin(first_term_tail), std::end(first_term_tail), input_token) != std::end(first_term_tail)) {
                 return term_tail(Term);
             }
         }
@@ -314,7 +325,7 @@ std::string term () {
     }
     catch (int e) {
         while(1) {
-            if(std::find(std::begin(first_term), std::end(first_term), name[input_token]) != std::end(first_term)) {
+            if(std::find(std::begin(first_term), std::end(first_term), input_token) != std::end(first_term)) {
                 return term();
             }
             else
@@ -323,7 +334,7 @@ std::string term () {
     }
 }
 
-std::string factor_tail(std::string Factor) {
+std::string factor_tail(std::string Factor, token cs_follow[]) {
     std::string FT;
     try {
         switch (input_token) {
@@ -341,14 +352,14 @@ std::string factor_tail(std::string Factor) {
     }
     catch (int e) {
         while(1) {
-            if(std::find(std::begin(follow_factor_tail), std::end(follow_factor_tail), name[input_token]) != std::end(follow_factor_tail)) {
+            if(std::find(std::begin(follow_factor_tail), std::end(follow_factor_tail), input_token) != std::end(follow_factor_tail)) {
                 parse_tree += "() ";
                 return Factor;
             }
 
             input_token = scan();
 
-            if(std::find(std::begin(first_factor_tail), std::end(first_factor_tail), name[input_token]) != std::end(first_factor_tail)) {
+            if(std::find(std::begin(first_factor_tail), std::end(first_factor_tail), input_token) != std::end(first_factor_tail)) {
                 return factor_tail(Factor);
             }
         }
@@ -383,7 +394,7 @@ std::string factor() {
     }
     catch(int e) {
         while(1) {
-            if(std::find(std::begin(first_factor), std::end(first_factor), name[input_token]) != std::end(first_factor)) {
+            if(std::find(std::begin(first_factor), std::end(first_factor), input_token) != std::end(first_factor)) {
                 return factor();
             }
             else
@@ -469,7 +480,7 @@ std::string rel_op () {
     }
     catch(int e) {
         while(1) {
-            if(std::find(std::begin(first_rel_op), std::end(first_rel_op), name[input_token]) != std::end(first_rel_op)) {
+            if(std::find(std::begin(first_rel_op), std::end(first_rel_op), input_token) != std::end(first_rel_op)) {
                 return rel_op();
             }
             else
