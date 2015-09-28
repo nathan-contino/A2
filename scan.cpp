@@ -50,7 +50,8 @@ token scan() {
 				cout << cerr << "error\n";
 				return t_error;
 			} else {
-				cin >> noskipws >> c;;
+				token_image = ":=";
+				cin >> noskipws >> c;
 				return t_gets;
 			}
 			break;
@@ -60,6 +61,7 @@ token scan() {
 				cout << cerr << "error\n";
 				return t_error;
 			} else {
+				token_image = "!=";
 				cin >> noskipws >> c;
 				return t_notequals;
 			}
@@ -70,6 +72,7 @@ token scan() {
 				cout << cerr << "error\n";
 				return t_error;
 			} else {
+				token_image = "==";
 				cin >> noskipws >> c;
 				return t_equals;
 			}
@@ -77,10 +80,14 @@ token scan() {
 		case '>':
             cin >> noskipws >> c;
 			if (c != '=') {
-				if (c == ' ') return t_greater;
+				if (c == ' ') {
+					token_image = ">";
+					return t_greater;
+				}
 				cout << cerr << "error\n";
 				return t_error;
 			} else {
+				token_image = ">=";
 				cin >> noskipws >> c;
 				return t_greaterequals;
 			}
@@ -88,20 +95,24 @@ token scan() {
 		case '<':
             cin >> noskipws >> c;
 			if (c != '=') {
-				if (c == ' ') return t_less;
+				if (c == ' ') {
+					token_image = "<";
+					return t_less;
+				}
 				cout << cerr << "error\n";
 				return t_error;
 			} else {
+				token_image = "<=";
 				cin >> noskipws >> c;
 				return t_lessequals;
 			}
 			break;
-		case '+': cin >> noskipws >> c; return t_add;
-		case '-': cin >> noskipws >> c; return t_sub;
-		case '*': cin >> noskipws >> c; return t_mul;
-		case '/': cin >> noskipws >> c; return t_div;
-		case '(': cin >> noskipws >> c; return t_lparen;
-		case ')': cin >> noskipws >> c; return t_rparen;
+		case '+': cin >> noskipws >> c; token_image = "+"; return t_add;
+		case '-': cin >> noskipws >> c; token_image = "-"; return t_sub;
+		case '*': cin >> noskipws >> c; token_image = "*"; return t_mul;
+		case '/': cin >> noskipws >> c; token_image = "/"; return t_div;
+		case '(': cin >> noskipws >> c; token_image = "("; return t_lparen;
+		case ')': cin >> noskipws >> c; token_image = ")"; return t_rparen;
 		default:
 			cout << "error\n";
 			return t_error;

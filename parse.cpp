@@ -56,12 +56,12 @@ std::string match (token expected) {
         if (input_token == t_id || input_token == t_literal) {
             std::string str(name[input_token]);
             parse_tree +=  "(" + str + " " + token_image + ") ";
-            temp = token_image + " ";
+            temp = token_image;
         }
         else {
             std::string str(name[input_token]);
             parse_tree += str + " ";
-            temp = token_image + " ";
+            temp = token_image;
         }
         input_token = scan();
         if(input_token == t_error) {
@@ -91,16 +91,16 @@ std::string stmt_list ();
 std::string stmt ();
 std::string expr ();
 std::string cmpr ();
-std::string term_tail ();
+std::string term_tail (std::string Term);
 std::string term ();
-std::string factor_tail ();
+std::string factor_tail (std::string Factor);
 std::string factor ();
 std::string rel_op ();
 std::string add_op ();
 std::string mul_op ();
 
 std::string program () {
-    std::string P = "(program ";
+    std::string P = "(program";
     switch (input_token) {
         case t_id:
         case t_read:
@@ -132,8 +132,8 @@ std::string stmt_list () {
             case t_while:
             case t_write:
                 parse_tree +=  "(stmt_list ";//("predict stmt_list --> stmt stmt_list\n");
-                SL += stmt() + ")";
-                SL += stmt_list();
+                SL += stmt();
+                SL += stmt_list() + ")";
                 parse_tree += ") ";
                 return SL;
             //not in first
@@ -186,16 +186,16 @@ std::string stmt () {
         case t_if:
             parse_tree +=  "(stmt ";//("predict stmt --> if expr\n");
             S = match(t_if) + " ";
-            S += cmpr() + " (";
-            S += stmt_list() + ") ";
+            S += cmpr();
+            S += stmt_list();
             match(t_end);
             parse_tree += ") ";
             return S;
         case t_while:
             parse_tree +=  "(stmt ";//("predict stmt --> while expr\n");
             S = match(t_while) + " ";
-            S += cmpr() + " (";
-            S += stmt_list() + ") "; 
+            S += cmpr();
+            S += stmt_list(); 
             match(t_end);
             parse_tree += ") ";
             return S;
@@ -205,7 +205,7 @@ std::string stmt () {
     }
 }
 
-std::string cmpr () {
+std::string cmpr() {
     std::string C;
     try {
         switch (input_token) {
@@ -214,8 +214,8 @@ std::string cmpr () {
             case t_lparen:
                 parse_tree +=  "(cmpr ";//("predict cmpr --> expr rel_op expr\n");
                 C = expr();
-                C = rel_op() + " " + C + " ";
-                C += expr() + ") ";
+                C = "(" + rel_op() + C + " ";
+                C += expr() + ")";
                 parse_tree += ") ";
                 return C;
             default: 
@@ -240,10 +240,10 @@ std::string expr() {
         switch (input_token) {
             case t_id:
             case t_literal:
-            case t_lparen:
+            case t_lparen://improve
                 parse_tree +=  "(expr ";//("predict expr --> term term_tail\n");
                 E = term();
-                term_tail();
+                E = term_tail(E);
                 parse_tree += ") ";
                 return E;
             default:
@@ -262,16 +262,16 @@ std::string expr() {
     }
 }
 
-std::string term_tail() {
+std::string term_tail(std::string Term) {
     std::string TT;
     try {
         switch (input_token) {
             case t_add:
-            case t_sub:
+            case t_sub://improve
                 parse_tree +=  "(term_tail ";//("predict term_tail --> add_op term term_tail\n");
-                TT = add_op();
-                term();
-                term_tail();
+                TT = "(" + add_op() + Term + " ";
+                TT += term() + ")";
+                TT = term_tail(TT);
                 parse_tree += ") ";
                 return TT;
             default:
@@ -282,14 +282,14 @@ std::string term_tail() {
         while(1) {
             if(std::find(std::begin(follow_term_tail), std::end(follow_term_tail), name[input_token]) != std::end(follow_term_tail)) {
                 parse_tree += "() ";
-                return "";
+                return Term;
             }
              
             input_token = scan();
 
 
             if(std::find(std::begin(first_term_tail), std::end(first_term_tail), name[input_token]) != std::end(first_term_tail)) {
-                return term_tail();
+                return term_tail(Term);
             }
         }
     }
@@ -304,7 +304,7 @@ std::string term () {
             case t_lparen:
                 parse_tree +=  "(term ";//("predict term --> factor factor_tail\n");
                 T = factor();
-                factor_tail ();
+                T = factor_tail(T);
                 parse_tree += ") ";
                 return T;
             default:
@@ -323,16 +323,16 @@ std::string term () {
     }
 }
 
-std::string factor_tail () {
+std::string factor_tail(std::string Factor) {
     std::string FT;
     try {
         switch (input_token) {
             case t_mul:
             case t_div:
                 parse_tree +=  "(factor_tail ";//("predict factor_tail --> mul_op factor factor_tail\n");
-                FT = mul_op();
-                factor();
-                factor_tail();
+                FT = "(" + mul_op() + Factor + " ";
+                FT += factor() + ") ";
+                FT = factor_tail(FT);
                 parse_tree += ") ";
                 return FT;
             default:
@@ -343,37 +343,37 @@ std::string factor_tail () {
         while(1) {
             if(std::find(std::begin(follow_factor_tail), std::end(follow_factor_tail), name[input_token]) != std::end(follow_factor_tail)) {
                 parse_tree += "() ";
-                return "";
+                return Factor;
             }
 
             input_token = scan();
 
             if(std::find(std::begin(first_factor_tail), std::end(first_factor_tail), name[input_token]) != std::end(first_factor_tail)) {
-                return factor_tail();
+                return factor_tail(Factor);
             }
         }
     }
 }
 
 std::string factor() {
-    std::string F;
+    std::string F;//improve
     try {
         switch (input_token) {
             case t_id :
                 parse_tree +=  "(factor ";//("predict factor --> id\n");
-                F = match (t_id);
+                F = match(t_id);
                 parse_tree += ") ";
                 return F;
             case t_literal:
                 parse_tree +=  "(factor ";//("predict factor --> literal\n");
-                F = match (t_literal);
+                F = match(t_literal);
                 parse_tree += ") ";
                 return F;
-            case t_lparen:
+            case t_lparen://improve
                 parse_tree +=  "(factor ";//("predict factor --> lparen expr rparen\n");
-                F = match (t_lparen);
-                expr ();
-                match (t_rparen);
+                match(t_lparen);
+                F = expr();
+                match(t_rparen);
                 parse_tree += ") ";
                 return F;
             default: 
@@ -429,38 +429,39 @@ std::string mul_op() {
 }
 
 std::string rel_op () {
+    std::string RO;
     try {
         switch (input_token) {
             case t_equals:
                 parse_tree +=  "(rel_op ";//("predict rel_op --> equals\n");
-                match (t_equals);
+                RO = match(t_equals) + " ";
                 parse_tree += ") ";
-                break;
+                return RO;
             case t_notequals:
                 parse_tree +=  "(rel_op ";//("predict rel_op --> notequals\n");
-                match (t_notequals);
+                RO = match(t_notequals) + " ";
                 parse_tree += ") ";
-                break;
+                return RO;
             case t_lessequals:
                 parse_tree +=  "(rel_op ";//("predict rel_op --> lessequals\n");
-                match (t_lessequals);
+                RO = match(t_lessequals) + " ";
                 parse_tree += ") ";
-                break;
+                return RO;
             case t_greaterequals:
                 parse_tree +=  "(rel_op ";//("predict rel_op --> greaterequals\n");
-                match (t_greaterequals);
+                RO = match(t_greaterequals) + " ";
                 parse_tree += ") ";
-                break;
+                return RO;
             case t_greater:
                 parse_tree +=  "(rel_op ";//("predict rel_op --> greater\n");
-                match (t_greater);
+                RO = match(t_greater) + " ";
                 parse_tree += ") ";
-                break;
+                return RO;
             case t_less:
                 parse_tree +=  "(rel_op ";//("predict rel_op --> less\n");
-                match (t_less);
+                RO = match(t_less) + " ";
                 parse_tree += ") ";
-                break;
+                return RO;
             default:
                 input_token = scan();
                 throw(1);
@@ -475,7 +476,6 @@ std::string rel_op () {
                 input_token = scan();
         }
     }
-    return "";
 }
 
 int main () {
