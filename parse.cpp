@@ -50,22 +50,25 @@ void error (std::string method_name) {
     // std::exit(1);
 }
 
-void match (token expected) {
-
+std::string match (token expected) {
+    std::string temp;
     if (input_token == expected) {
         if (input_token == t_id || input_token == t_literal) {
             std::string str(name[input_token]);
-            parse_tree +=  "(" + str + " " + token_image + ") ";   
+            parse_tree +=  "(" + str + " " + token_image + ") ";
+            temp = token_image + " ";
         }
         else {
             std::string str(name[input_token]);
             parse_tree += str + " ";
+            temp = token_image + " ";
         }
         input_token = scan();
         if(input_token == t_error) {
             error("errorA");
             std::exit(1);
         }
+        return temp;
     }
     else {
         //insert the token
@@ -76,24 +79,28 @@ void match (token expected) {
         else {
             std::string str(name[expected]);
             parse_tree += str + " ";
+            temp = str + " ";
+            return temp;
         }
+        return "";
     }
 }
 
-void program ();
-void stmt_list ();
-void stmt ();
-void expr ();
-void cmpr ();
-void term_tail ();
-void term ();
-void factor_tail ();
-void factor ();
-void rel_op ();
-void add_op ();
-void mul_op ();
+std::string program ();
+std::string stmt_list ();
+std::string stmt ();
+std::string expr ();
+std::string cmpr ();
+std::string term_tail ();
+std::string term ();
+std::string factor_tail ();
+std::string factor ();
+std::string rel_op ();
+std::string add_op ();
+std::string mul_op ();
 
-void program () {
+std::string program () {
+    std::string P = "(program ";
     switch (input_token) {
         case t_id:
         case t_read:
@@ -101,105 +108,116 @@ void program () {
         case t_if:
         case t_while:
         case t_eof:
-            parse_tree = "(program ";//("predict program --> stmt_list eof\n");
-            stmt_list ();
-            match (t_eof);
+            parse_tree = "(program";//("predict program --> stmt_list eof\n");
+            P += stmt_list();
+            P += match(t_eof);
+            P += ")\n";
             parse_tree += ")\n ";
             break;
         default: error (__func__);
             input_token = scan();
             program();
     }
+    return P;
 }
 
-void stmt_list () {
+std::string stmt_list () {
+    std::string SL = " (";
     try {
         switch (input_token) {
+            //in first
             case t_id:
             case t_read:
             case t_if:
             case t_while:
             case t_write:
                 parse_tree +=  "(stmt_list ";//("predict stmt_list --> stmt stmt_list\n");
-                stmt ();
-                stmt_list ();
+                SL += stmt() + ")";
+                SL += stmt_list();
                 parse_tree += ") ";
-                return;
+                return SL;
+            //not in first
             default:
                 throw(1);
         }
     }
+    //catch error
     catch(int e) {
         while(1) {
+            //check in follow (can be context sensative)
             if(std::find(std::begin(follow_stmt_list), std::end(follow_stmt_list), name[input_token]) != std::end(follow_stmt_list)) {
                 parse_tree += "() ";
-                return;
+                return "";
             }
             
+            //if not in first and follow (as checked in the try block)
             input_token = scan();
 
+            //check if in first
             if(std::find(std::begin(first_stmt_list), std::end(first_stmt_list), name[input_token]) != std::end(first_stmt_list)) {
-                stmt_list();
-                return;
+                return stmt_list();
             }
         }
     }
 }
 
-void stmt () {
+std::string stmt () {
+    std::string S;
     switch (input_token) {
         case t_id:
             parse_tree +=  "(stmt ";//("predict stmt --> id gets expr\n");
-            match(t_id);
-            match(t_gets);
-            expr();
+            S = match(t_id);
+            S = match(t_gets) + " " + S + " ";
+            S += expr();
             parse_tree += ") ";
-            break;
+            return S;
         case t_read:
             parse_tree +=  "(stmt ";//("predict stmt --> read id\n");
-            match(t_read);
-            match(t_id);
+            S = match(t_read) + " ";
+            S += match(t_id);
             parse_tree += ") ";
-            break;
+            return S;
         case t_write:
             parse_tree +=  "(stmt ";//("predict stmt --> write expr\n");
-            match(t_write);
-            expr();
+            S = match(t_write) + " ";
+            S += expr();
             parse_tree += ") ";
-            break;
+            return S;
         case t_if:
             parse_tree +=  "(stmt ";//("predict stmt --> if expr\n");
-            match(t_if);
-            cmpr();
-            stmt_list();
+            S = match(t_if) + " ";
+            S += cmpr() + " (";
+            S += stmt_list() + ") ";
             match(t_end);
             parse_tree += ") ";
-            break;
+            return S;
         case t_while:
             parse_tree +=  "(stmt ";//("predict stmt --> while expr\n");
-            match(t_while);
-            cmpr();
-            stmt_list(); 
+            S = match(t_while) + " ";
+            S += cmpr() + " (";
+            S += stmt_list() + ") "; 
             match(t_end);
             parse_tree += ") ";
-            break;
+            return S;
         default:
             throw(1);
+            return "";
     }
 }
 
-void cmpr () {
+std::string cmpr () {
+    std::string C;
     try {
         switch (input_token) {
             case t_id:
             case t_literal:
             case t_lparen:
                 parse_tree +=  "(cmpr ";//("predict cmpr --> expr rel_op expr\n");
-                expr ();
-                rel_op ();
-                expr ();
+                C = expr();
+                C = rel_op() + " " + C + " ";
+                C += expr() + ") ";
                 parse_tree += ") ";
-                break;
+                return C;
             default: 
                 input_token = scan();
                 throw(1);
@@ -208,8 +226,7 @@ void cmpr () {
     catch(int e) {
         while(1) {
             if(std::find(std::begin(first_cmpr), std::end(first_cmpr), name[input_token]) != std::end(first_cmpr)) {
-                cmpr();
-                return;
+                return cmpr();
             }
             else
                 input_token = scan();
@@ -217,17 +234,18 @@ void cmpr () {
     }
 }
 
-void expr() {
+std::string expr() {
+    std::string E;
     try {
         switch (input_token) {
             case t_id:
             case t_literal:
             case t_lparen:
                 parse_tree +=  "(expr ";//("predict expr --> term term_tail\n");
-                term();
+                E = term();
                 term_tail();
                 parse_tree += ") ";
-                break;
+                return E;
             default:
                 input_token = scan();
                 throw(1);
@@ -236,8 +254,7 @@ void expr() {
     catch (int e) {
         while(1) {
             if(std::find(std::begin(first_expr), std::end(first_expr), name[input_token]) != std::end(first_expr)) {
-                expr();
-                return;
+                return expr();
             }
             else
                 input_token = scan();
@@ -245,17 +262,18 @@ void expr() {
     }
 }
 
-void term_tail() {
+std::string term_tail() {
+    std::string TT;
     try {
         switch (input_token) {
             case t_add:
             case t_sub:
                 parse_tree +=  "(term_tail ";//("predict term_tail --> add_op term term_tail\n");
-                add_op();
+                TT = add_op();
                 term();
                 term_tail();
                 parse_tree += ") ";
-                break;
+                return TT;
             default:
                 throw(1);
         }
@@ -264,31 +282,31 @@ void term_tail() {
         while(1) {
             if(std::find(std::begin(follow_term_tail), std::end(follow_term_tail), name[input_token]) != std::end(follow_term_tail)) {
                 parse_tree += "() ";
-                return;
+                return "";
             }
              
             input_token = scan();
 
 
             if(std::find(std::begin(first_term_tail), std::end(first_term_tail), name[input_token]) != std::end(first_term_tail)) {
-                term_tail();
-                return;
+                return term_tail();
             }
         }
     }
 }
 
-void term () {
+std::string term () {
+    std::string T;
     try {
         switch (input_token) {
             case t_id:
             case t_literal:
             case t_lparen:
                 parse_tree +=  "(term ";//("predict term --> factor factor_tail\n");
-                factor ();
+                T = factor();
                 factor_tail ();
                 parse_tree += ") ";
-                break;
+                return T;
             default:
                 input_token = scan();
                 throw(1);
@@ -297,8 +315,7 @@ void term () {
     catch (int e) {
         while(1) {
             if(std::find(std::begin(first_term), std::end(first_term), name[input_token]) != std::end(first_term)) {
-                term();
-                return;
+                return term();
             }
             else
                 input_token = scan();
@@ -306,17 +323,18 @@ void term () {
     }
 }
 
-void factor_tail () {
+std::string factor_tail () {
+    std::string FT;
     try {
         switch (input_token) {
             case t_mul:
             case t_div:
                 parse_tree +=  "(factor_tail ";//("predict factor_tail --> mul_op factor factor_tail\n");
-                mul_op();
+                FT = mul_op();
                 factor();
                 factor_tail();
                 parse_tree += ") ";
-                break;
+                return FT;
             default:
                 throw(1);
         }
@@ -325,39 +343,39 @@ void factor_tail () {
         while(1) {
             if(std::find(std::begin(follow_factor_tail), std::end(follow_factor_tail), name[input_token]) != std::end(follow_factor_tail)) {
                 parse_tree += "() ";
-                return;
+                return "";
             }
 
             input_token = scan();
 
             if(std::find(std::begin(first_factor_tail), std::end(first_factor_tail), name[input_token]) != std::end(first_factor_tail)) {
-                factor_tail();
-                return;
+                return factor_tail();
             }
         }
     }
 }
 
-void factor() {
+std::string factor() {
+    std::string F;
     try {
         switch (input_token) {
             case t_id :
                 parse_tree +=  "(factor ";//("predict factor --> id\n");
-                match (t_id);
+                F = match (t_id);
                 parse_tree += ") ";
-                break;
+                return F;
             case t_literal:
                 parse_tree +=  "(factor ";//("predict factor --> literal\n");
-                match (t_literal);
+                F = match (t_literal);
                 parse_tree += ") ";
-                break;
+                return F;
             case t_lparen:
                 parse_tree +=  "(factor ";//("predict factor --> lparen expr rparen\n");
-                match (t_lparen);
+                F = match (t_lparen);
                 expr ();
                 match (t_rparen);
                 parse_tree += ") ";
-                break;
+                return F;
             default: 
                 input_token = scan();
                 throw(1);
@@ -366,8 +384,7 @@ void factor() {
     catch(int e) {
         while(1) {
             if(std::find(std::begin(first_factor), std::end(first_factor), name[input_token]) != std::end(first_factor)) {
-                factor();
-                return;
+                return factor();
             }
             else
                 input_token = scan();
@@ -375,41 +392,43 @@ void factor() {
     }
 }
 
-void add_op () {
+std::string add_op() {
+    std::string AO;
     switch (input_token) {
         case t_add:
             parse_tree +=  "(add_op ";//("predict add_op --> add\n");
-            match (t_add);
+            AO = match (t_add) + " ";
             parse_tree += ") ";
-            break;
+            return AO;
         case t_sub:
             parse_tree +=  "(add_op ";//("predict add_op --> sub\n");
-            match (t_sub);
+            AO = match (t_sub) + " ";
             parse_tree += ") ";
-            break;
+            return AO;
         default:
             throw(1);
     }
 }
 
-void mul_op () {
+std::string mul_op() {
+    std::string MO;
     switch (input_token) {
         case t_mul:
             parse_tree +=  "(mul_op ";//("predict mul_op --> mul\n");
-            match (t_mul);
+            MO = match(t_mul) + " ";
             parse_tree += ") ";
-            break;
+            return MO;
         case t_div:
             parse_tree +=  "(mul_op ";//("predict mul_op --> div\n");
-            match (t_div);
+            MO = match(t_div) + " ";
             parse_tree += ") ";
-            break;
+            return MO;
         default: 
             throw(1);
     }
 }
 
-void rel_op () {
+std::string rel_op () {
     try {
         switch (input_token) {
             case t_equals:
@@ -450,21 +469,21 @@ void rel_op () {
     catch(int e) {
         while(1) {
             if(std::find(std::begin(first_rel_op), std::end(first_rel_op), name[input_token]) != std::end(first_rel_op)) {
-                rel_op();
-                return;
+                return rel_op();
             }
             else
                 input_token = scan();
         }
     }
+    return "";
 }
 
 int main () {
     input_token = scan();
     if(input_token == t_error)
         error("errorB");
-    program();
+    std::cout << program() << "\n\n";
     std::cout << parse_tree;
-    
+
     return 0;
 }
