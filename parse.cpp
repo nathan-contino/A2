@@ -86,18 +86,18 @@ std::string match (token expected) {
     }
 }
 
-std::string program ();
-std::string stmt_list ();
-std::string stmt ();
-std::string expr ();
-std::string cmpr ();
-std::string term_tail (std::string Term);
-std::string term ();
-std::string factor_tail (std::string Factor);
-std::string factor ();
-std::string rel_op ();
-std::string add_op ();
-std::string mul_op ();
+std::string program();
+std::string stmt_list();
+std::string stmt();
+std::string expr();
+std::string cmpr();
+std::string term_tail(std::string Term);
+std::string term();
+std::string factor_tail(std::string Factor);
+std::string factor();
+std::string rel_op();
+std::string add_op();
+std::string mul_op();
 
 std::string program () {
     std::string P = "(program";
@@ -121,7 +121,7 @@ std::string program () {
     return P;
 }
 
-std::string stmt_list () {
+std::string stmt_list() {
     std::string SL = " (";
     try {
         switch (input_token) {
