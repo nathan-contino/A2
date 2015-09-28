@@ -42,6 +42,7 @@ const char* follow_mul_op[] = {"lparen", "id", "lit"};
 const char* first_mul_op[] = {"mul", "div"};
 
 static token input_token;
+std::string parse_tree;
 
 void error (std::string method_name) {
     std::cout << "\nerror" << method_name << "\n";
@@ -53,10 +54,13 @@ void match (token expected) {
 
     if (input_token == expected) {
         if (input_token == t_id || input_token == t_literal) {
-            std::cout << "(" << name[input_token] << " " << token_image << ")";   
+            std::string str(name[input_token]);
+            parse_tree +=  "(" + str + " " + token_image + ") ";   
         }
-        else 
-            std::cout << name[input_token];
+        else {
+            std::string str(name[input_token]);
+            parse_tree += str + " ";
+        }
         input_token = scan();
         if(input_token == t_error) {
             error("errorA");
@@ -66,11 +70,13 @@ void match (token expected) {
     else {
         //insert the token
         if (input_token == t_literal)
-            std::cout << "(" << name[t_literal] << " 1)";   
+            std::cout << "(" << name[t_literal] << " 1) ";   
         else if(input_token == t_id)
             std::cout << "IDinsertion";//this part fuck if i know
-        else 
-            std::cout << name[expected];
+        else {
+            std::string str(name[expected]);
+            parse_tree += str + " ";
+        }
     }
 }
 
@@ -95,10 +101,10 @@ void program () {
         case t_if:
         case t_while:
         case t_eof:
-            std::cout <<  "(program ";//("predict program --> stmt_list eof\n");
+            parse_tree = "(program ";//("predict program --> stmt_list eof\n");
             stmt_list ();
             match (t_eof);
-            std::cout << ")\n ";
+            parse_tree += ")\n ";
             break;
         default: error (__func__);
             input_token = scan();
@@ -114,10 +120,10 @@ void stmt_list () {
             case t_if:
             case t_while:
             case t_write:
-                std::cout <<  "(stmt_list ";//("predict stmt_list --> stmt stmt_list\n");
+                parse_tree +=  "(stmt_list ";//("predict stmt_list --> stmt stmt_list\n");
                 stmt ();
                 stmt_list ();
-                std::cout << ") ";
+                parse_tree += ") ";
                 return;
             default:
                 throw(1);
@@ -126,6 +132,7 @@ void stmt_list () {
     catch(int e) {
         while(1) {
             if(std::find(std::begin(follow_stmt_list), std::end(follow_stmt_list), name[input_token]) != std::end(follow_stmt_list)) {
+                parse_tree += "() ";
                 return;
             }
             
@@ -142,39 +149,39 @@ void stmt_list () {
 void stmt () {
     switch (input_token) {
         case t_id:
-            std::cout <<  "(stmt ";//("predict stmt --> id gets expr\n");
+            parse_tree +=  "(stmt ";//("predict stmt --> id gets expr\n");
             match(t_id);
             match(t_gets);
             expr();
-            std::cout << ") ";
+            parse_tree += ") ";
             break;
         case t_read:
-            std::cout <<  "(stmt ";//("predict stmt --> read id\n");
+            parse_tree +=  "(stmt ";//("predict stmt --> read id\n");
             match(t_read);
             match(t_id);
-            std::cout << ") ";
+            parse_tree += ") ";
             break;
         case t_write:
-            std::cout <<  "(stmt ";//("predict stmt --> write expr\n");
+            parse_tree +=  "(stmt ";//("predict stmt --> write expr\n");
             match(t_write);
             expr();
-            std::cout << ") ";
+            parse_tree += ") ";
             break;
         case t_if:
-            std::cout <<  "(stmt ";//("predict stmt --> if expr\n");
+            parse_tree +=  "(stmt ";//("predict stmt --> if expr\n");
             match(t_if);
             cmpr();
             stmt_list();
             match(t_end);
-            std::cout << ") ";
+            parse_tree += ") ";
             break;
         case t_while:
-            std::cout <<  "(stmt ";//("predict stmt --> while expr\n");
+            parse_tree +=  "(stmt ";//("predict stmt --> while expr\n");
             match(t_while);
             cmpr();
             stmt_list(); 
             match(t_end);
-            std::cout << ") ";
+            parse_tree += ") ";
             break;
         default:
             throw(1);
@@ -187,11 +194,11 @@ void cmpr () {
             case t_id:
             case t_literal:
             case t_lparen:
-                std::cout <<  "(cmpr ";//("predict cmpr --> expr rel_op expr\n");
+                parse_tree +=  "(cmpr ";//("predict cmpr --> expr rel_op expr\n");
                 expr ();
                 rel_op ();
                 expr ();
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             default: 
                 input_token = scan();
@@ -216,10 +223,10 @@ void expr() {
             case t_id:
             case t_literal:
             case t_lparen:
-                std::cout <<  "(expr ";//("predict expr --> term term_tail\n");
+                parse_tree +=  "(expr ";//("predict expr --> term term_tail\n");
                 term();
                 term_tail();
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             default:
                 input_token = scan();
@@ -243,11 +250,11 @@ void term_tail() {
         switch (input_token) {
             case t_add:
             case t_sub:
-                std::cout <<  "(term_tail ";//("predict term_tail --> add_op term term_tail\n");
+                parse_tree +=  "(term_tail ";//("predict term_tail --> add_op term term_tail\n");
                 add_op();
                 term();
                 term_tail();
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             default:
                 throw(1);
@@ -256,6 +263,7 @@ void term_tail() {
     catch (int e) {
         while(1) {
             if(std::find(std::begin(follow_term_tail), std::end(follow_term_tail), name[input_token]) != std::end(follow_term_tail)) {
+                parse_tree += "() ";
                 return;
             }
              
@@ -276,10 +284,10 @@ void term () {
             case t_id:
             case t_literal:
             case t_lparen:
-                std::cout <<  "(term ";//("predict term --> factor factor_tail\n");
+                parse_tree +=  "(term ";//("predict term --> factor factor_tail\n");
                 factor ();
                 factor_tail ();
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             default:
                 input_token = scan();
@@ -303,11 +311,11 @@ void factor_tail () {
         switch (input_token) {
             case t_mul:
             case t_div:
-                std::cout <<  "(factor_tail ";//("predict factor_tail --> mul_op factor factor_tail\n");
+                parse_tree +=  "(factor_tail ";//("predict factor_tail --> mul_op factor factor_tail\n");
                 mul_op();
                 factor();
                 factor_tail();
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             default:
                 throw(1);
@@ -316,6 +324,7 @@ void factor_tail () {
     catch (int e) {
         while(1) {
             if(std::find(std::begin(follow_factor_tail), std::end(follow_factor_tail), name[input_token]) != std::end(follow_factor_tail)) {
+                parse_tree += "() ";
                 return;
             }
 
@@ -333,21 +342,21 @@ void factor() {
     try {
         switch (input_token) {
             case t_id :
-                std::cout <<  "(factor ";//("predict factor --> id\n");
+                parse_tree +=  "(factor ";//("predict factor --> id\n");
                 match (t_id);
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             case t_literal:
-                std::cout <<  "(factor ";//("predict factor --> literal\n");
+                parse_tree +=  "(factor ";//("predict factor --> literal\n");
                 match (t_literal);
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             case t_lparen:
-                std::cout <<  "(factor ";//("predict factor --> lparen expr rparen\n");
+                parse_tree +=  "(factor ";//("predict factor --> lparen expr rparen\n");
                 match (t_lparen);
                 expr ();
                 match (t_rparen);
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             default: 
                 input_token = scan();
@@ -369,14 +378,14 @@ void factor() {
 void add_op () {
     switch (input_token) {
         case t_add:
-            std::cout <<  "(add_op ";//("predict add_op --> add\n");
+            parse_tree +=  "(add_op ";//("predict add_op --> add\n");
             match (t_add);
-            std::cout << ") ";
+            parse_tree += ") ";
             break;
         case t_sub:
-            std::cout <<  "(add_op ";//("predict add_op --> sub\n");
+            parse_tree +=  "(add_op ";//("predict add_op --> sub\n");
             match (t_sub);
-            std::cout << ") ";
+            parse_tree += ") ";
             break;
         default:
             throw(1);
@@ -386,14 +395,14 @@ void add_op () {
 void mul_op () {
     switch (input_token) {
         case t_mul:
-            std::cout <<  "(mul_op ";//("predict mul_op --> mul\n");
+            parse_tree +=  "(mul_op ";//("predict mul_op --> mul\n");
             match (t_mul);
-            std::cout << ") ";
+            parse_tree += ") ";
             break;
         case t_div:
-            std::cout <<  "(mul_op ";//("predict mul_op --> div\n");
+            parse_tree +=  "(mul_op ";//("predict mul_op --> div\n");
             match (t_div);
-            std::cout << ") ";
+            parse_tree += ") ";
             break;
         default: 
             throw(1);
@@ -404,34 +413,34 @@ void rel_op () {
     try {
         switch (input_token) {
             case t_equals:
-                std::cout <<  "(rel_op ";//("predict rel_op --> equals\n");
+                parse_tree +=  "(rel_op ";//("predict rel_op --> equals\n");
                 match (t_equals);
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             case t_notequals:
-                std::cout <<  "(rel_op ";//("predict rel_op --> notequals\n");
+                parse_tree +=  "(rel_op ";//("predict rel_op --> notequals\n");
                 match (t_notequals);
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             case t_lessequals:
-                std::cout <<  "(rel_op ";//("predict rel_op --> lessequals\n");
+                parse_tree +=  "(rel_op ";//("predict rel_op --> lessequals\n");
                 match (t_lessequals);
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             case t_greaterequals:
-                std::cout <<  "(rel_op ";//("predict rel_op --> greaterequals\n");
+                parse_tree +=  "(rel_op ";//("predict rel_op --> greaterequals\n");
                 match (t_greaterequals);
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             case t_greater:
-                std::cout <<  "(rel_op ";//("predict rel_op --> greater\n");
+                parse_tree +=  "(rel_op ";//("predict rel_op --> greater\n");
                 match (t_greater);
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             case t_less:
-                std::cout <<  "(rel_op ";//("predict rel_op --> less\n");
+                parse_tree +=  "(rel_op ";//("predict rel_op --> less\n");
                 match (t_less);
-                std::cout << ") ";
+                parse_tree += ") ";
                 break;
             default:
                 input_token = scan();
@@ -454,5 +463,8 @@ int main () {
     input_token = scan();
     if(input_token == t_error)
         error("errorB");
-    program ();
+    program();
+    std::cout << parse_tree;
+    
+    return 0;
 }
