@@ -1,64 +1,90 @@
-/* Simple ad-hoc scanner for the calculator language.
-*/
+/*
+ * 
+ * Ryan Lee (rlee35) & Nathan Contino (ncontino)
+ * CSC 254 -- Fall 2015
+ * A2: Syntax Error Recovery
+ * 
+ */
 
+
+/* Simple ad-hoc scanner for the calculator language. */
 #include <iostream>
-#include <string>
 #include "scan.h"
 
-
+//global string to pass the token image to the parser
 std::string token_image;
-token scan() {
-	//
-	using namespace std;
- 	token_image = "";
-	static char c = ' ';
-		/* next available char; extra (int) width accommodates EOF */
-	int i = 0;			  /* index into token_image */
 
-	/* skip white space */
+//syntax error message handler
+void syntax_error() {
+    std::cout << "ERROR: Invalid token syntax, \"" << token_image << "\" found.  Deleted invalid token & continued parse\n";
+}
+
+//raw scanner, attempts to read a token in
+token scan_raw() {
+	using namespace std;
+
+ 	token_image = "";// reset the token image
+	static char c = ' ';// next available char; extra (int) width accommodates EOF 
+
+	//skip whitespace
 	while (isspace(c) && !cin.eof()) {
 		cin >> noskipws >> c;
 	}
-
-	if (cin.eof()) {
+	//detect if at end of file, return eof token if we are
+	if (cin.eof())
 		return t_eof;
-	}
+
+	//if the first character is a letter, read until invalid character
 	else if (isalpha(c)) {
 		do {
 			token_image += c;
 			cin >> noskipws >> c;
 		} while ((isalpha(c) || isdigit(c) || c == '_') && !cin.eof());
-				//token_image[i] = '\0';
+
+		//match to terminal words
 		if (!token_image.compare("read")) return t_read;
 		else if (!token_image.compare("write")) return t_write;
 		else if (!token_image.compare("if")) return t_if;
 		else if (!token_image.compare("while")) return t_while;
 		else if (!token_image.compare("end")) return t_end;
-		else return t_id;
+		else return t_id;//if not a terminal, assume it is an id
 	}
+	//if the first character is a number, read until invalid character
 	else if (isdigit(c)) {
 		do {
 			token_image += c;
 			cin >> noskipws >> c;
-		} while (isdigit(c));
-		//token_image[i] = '\0';
+		} while (isdigit(c) && !cin.eof());
+		//return literal token
 		return t_literal;
-	} else switch (c) {
+	}
+	//otherwise, look for operators based off the first character.  Manually set token image and return t_error tokens when invalid tokens seen
+	else switch (c) {
+		//if (cin.eof()) cases handle cases where cin would read the same character twice giving a valid character for "=$$" thinking it was "=="
 		case ':':
             cin >> noskipws >> c;
-			if (c != '=') {
-				cout << cerr << "error\n";
+			if (cin.eof()) {
+				token_image = ": ";
+				return t_error;
+            }
+			else if (c != '=') {
+				token_image = ":";
+				token_image += c;
 				return t_error;
 			} else {
 				token_image = ":=";
 				cin >> noskipws >> c;
 				return t_gets;
 			}
-			break;
 		case '!':
             cin >> noskipws >> c;
-			if (c != '=') {
-				cout << cerr << "error\n";
+			if (cin.eof()) {
+				token_image = "! ";
+				return t_error;
+            }
+			else if (c != '=') {
+				token_image = "!";
+				token_image += c;
 				return t_error;
 			} else {
 				token_image = "!=";
@@ -68,8 +94,13 @@ token scan() {
 			break;
 		case '=':
             cin >> noskipws >> c;
-			if (c != '=') {
-				cout << cerr << "error\n";
+            if (cin.eof()) {
+				token_image = "= ";
+				return t_error;
+            }
+			else if (c != '=') {
+				token_image = "=";
+				token_image += c;
 				return t_error;
 			} else {
 				token_image = "==";
@@ -80,11 +111,12 @@ token scan() {
 		case '>':
             cin >> noskipws >> c;
 			if (c != '=') {
-				if (c == ' ') {
+				if (c == ' ' || cin.eof()) {
 					token_image = ">";
 					return t_greater;
 				}
-				cout << cerr << "error\n";
+				token_image = ">";
+				token_image += c;
 				return t_error;
 			} else {
 				token_image = ">=";
@@ -95,11 +127,12 @@ token scan() {
 		case '<':
             cin >> noskipws >> c;
 			if (c != '=') {
-				if (c == ' ') {
+				if (c == ' ' || cin.eof()) {
 					token_image = "<";
 					return t_less;
 				}
-				cout << cerr << "error\n";
+				token_image = "<";
+				token_image += c;
 				return t_error;
 			} else {
 				token_image = "<=";
@@ -114,7 +147,20 @@ token scan() {
 		case '(': cin >> noskipws >> c; token_image = "("; return t_lparen;
 		case ')': cin >> noskipws >> c; token_image = ")"; return t_rparen;
 		default:
-			cout << "error\n";
+			token_image = c;
 			return t_error;
 	}
+}
+
+//scanner wrapper method which ensures a valid token
+token scan() {
+	token t = scan_raw();
+
+	//if the raw scanner returned a t_error token, write an error message and scan again for a valid token
+	if(t == t_error) {
+		syntax_error();
+		return scan();
+	}
+
+	return t;
 }
