@@ -14,9 +14,9 @@
 //global string to pass the token image to the parser
 std::string token_image;
 
-//syntax error message handler
-void syntax_error() {
-    std::cout << "ERROR: Invalid token syntax, \"" << token_image << "\" found.  Deleted invalid token & continued parse\n";
+//Token error message handler
+void token_error() {
+    std::cout << "TOKEN ERROR: Invalid token syntax, \"" << token_image << "\" found.  Deleted invalid token & continued parse\n";
 }
 
 //raw scanner, attempts to read a token in
@@ -158,7 +158,7 @@ token scan() {
 
 	//if the raw scanner returned a t_error token, write an error message and scan again for a valid token
 	if(t == t_error) {
-		syntax_error();
+		token_error();
 		return scan();
 	}
 

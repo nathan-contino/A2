@@ -86,17 +86,17 @@ void eof_error (token expected, std::string expected_image, std::string method_n
     //print respective error messages based on where the eof token was seen
     //at end of E1 in C -> E1 ro E2, before ro
     if(!method_name.compare("REL_OP")) {
-        std::cout << "ERROR: No relative operator found after EXPR1 within CMPR. Missing operator causes a fatal error in "  + method_name + "\n"; 
-        exit(1);
+        std::cout << "EOF ERROR: No relative operator found after EXPR1 within CMPR. Missing operator causes a fatal error in "  + method_name + "\n"; 
+        std::exit(1);
     }
     //beginning of E2 after ro in C-> E1 ro E2
     else if(!method_name.compare("CMPR")) {
-        std::cout << "ERROR: Found t_eof after " << token_string[expected] << ". Dangling \"" + expected_image + "\" operator causes a fatal error in " + method_name + "\n"; 
-        exit(1);
+        std::cout << "EOF ERROR: Found t_eof after " << token_string[expected] << ". Dangling \"" + expected_image + "\" operator causes a fatal error in " + method_name + "\n"; 
+        std::exit(1);
     }
     else if(!method_name.compare("FACTOR") || !method_name.compare("EXPR") || !method_name.compare("TERM")) {
-        std::cout << "ERROR: Found t_eof after a parse_error.  Unable to parse a valid " + method_name + ", a fatal error\n"; 
-        exit(1);
+        std::cout << "EOF ERROR: Found t_eof after a parse_error.  Unable to parse a valid " + method_name + ", a fatal error\n"; 
+        std::exit(1);
     }
     // else if(!method_name.compare("EXPR")) {
     //     std::cout << "ERROR: Found t_eof after a parse_error.  Unable to find a valid " + method_name + ", a fatal error in " + method_name + "\n"; 
@@ -104,24 +104,24 @@ void eof_error (token expected, std::string expected_image, std::string method_n
     // }
     // else if()
     //otherwise, before T after ao in TT -> ao T TT OR before F after mo in FT -> mo F FT
-    std::cout << "ERROR: Found t_eof after " << token_string[expected] << ". Deleted dangling \"" + expected_image + "\" operator in " + method_name + " and parse continued\n";
+    std::cout << "EOF ERROR: Found t_eof after " << token_string[expected] << ". Deleted dangling \"" + expected_image + "\" operator in " + method_name + " and parse continued\n";
 }
 
 void parse_error(std::string method_name) {
     //print respective error message based on if the parse error is in something that has the ability to go to epsilon (just not in this context)
     //non-terminal characters that can go to epsilon
     if(!method_name.compare("STMT_LIST") || !method_name.compare("FACTOR_TAIL") || !method_name.compare("TERM_TAIL"))
-        std::cout << "ERROR: Found " << token_string[input_token] << " token in " + method_name + ". " << token_string[input_token] << " is not in the first-set of " + method_name + " & is not in the context-sensitive follow-set. " << token_string[input_token] << " token deleted & parse continued\n";
+        std::cout << "PARSE ERROR: Found " << token_string[input_token] << " token in " + method_name + ". " << token_string[input_token] << " is not in the first-set of " + method_name + " & is not in the context-sensitive follow-set. " << token_string[input_token] << " token deleted & parse continued\n";
     //everything else that can't go to epsilon
     else
-        std::cout << "ERROR: Found " << token_string[input_token] << " token in " + method_name + ". " << token_string[input_token] << " is not in the first-set of " + method_name + " & " + method_name + " cannot go to epsilon. " << token_string[input_token] << " token deleted & parse continued\n";
+        std::cout << "PARSE ERROR: Found " << token_string[input_token] << " token in " + method_name + ". " << token_string[input_token] << " is not in the first-set of " + method_name + " & " + method_name + " cannot go to epsilon. " << token_string[input_token] << " token deleted & parse continued\n";
     //scan in next token, effectively deleting the current token
     input_token = scan();
 }
 
 void match_error(std::string inserted_token, std::string inserted_terminal) {
     //print error message with specific information about what was inserted to move forward
-    std::cout << "ERROR: Expected an " + inserted_token + " token, found " << token_string[input_token] << " token instead. Inserted \"" + inserted_terminal + "\" & parse continued\n";
+    std::cout << "MATCH ERROR: Expected an " + inserted_token + " token, found " << token_string[input_token] << " token instead. Inserted \"" + inserted_terminal + "\" & parse continued\n";
 }
 
 
@@ -297,7 +297,7 @@ std::string stmt(token cs_follow[]) {
         case t_if:
         case t_while:
             S = match(input_token) + " ";//match if or while
-            S += cmpr(first_stmt_list);//parse comparison
+            S += cmpr(concat(first_stmt_list, end_and_eof));//parse comparison
             S += stmt_list(end_and_eof);//parse statement list with new context sensitive follow set
             match(t_end);//match end, including eof in the context sensitive follow set allows end to be inserted
             return S;
