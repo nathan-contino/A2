@@ -94,25 +94,34 @@ void eof_error (token expected, std::string expected_image, std::string method_n
         std::cout << "ERROR: Found t_eof after " << token_string[expected] << ". Dangling \"" + expected_image + "\" operator causes a fatal error in " + method_name + "\n"; 
         exit(1);
     }
+    else if(!method_name.compare("FACTOR") || !method_name.compare("EXPR") || !method_name.compare("TERM")) {
+        std::cout << "ERROR: Found t_eof after a parse_error.  Unable to parse a valid " + method_name + ", a fatal error\n"; 
+        exit(1);
+    }
+    // else if(!method_name.compare("EXPR")) {
+    //     std::cout << "ERROR: Found t_eof after a parse_error.  Unable to find a valid " + method_name + ", a fatal error in " + method_name + "\n"; 
+    //     exit(1);
+    // }
+    // else if()
     //otherwise, before T after ao in TT -> ao T TT OR before F after mo in FT -> mo F FT
-    std::cout << "ERROR: Found t_eof after " << token_string[expected] << ". Deleted dangling \"" + expected_image + "\" operator in " + method_name + " and continued parse\n";
+    std::cout << "ERROR: Found t_eof after " << token_string[expected] << ". Deleted dangling \"" + expected_image + "\" operator in " + method_name + " and parse continued\n";
 }
 
 void parse_error(std::string method_name) {
     //print respective error message based on if the parse error is in something that has the ability to go to epsilon (just not in this context)
     //non-terminal characters that can go to epsilon
     if(!method_name.compare("STMT_LIST") || !method_name.compare("FACTOR_TAIL") || !method_name.compare("TERM_TAIL"))
-        std::cout << "ERROR: Found " << token_string[input_token] << " token in " + method_name + ". " << token_string[input_token] << " is not in the first-set of " + method_name + " & is not in the context-sensitive follow-set. " << token_string[input_token] << " token deleted & continued parse\n";
+        std::cout << "ERROR: Found " << token_string[input_token] << " token in " + method_name + ". " << token_string[input_token] << " is not in the first-set of " + method_name + " & is not in the context-sensitive follow-set. " << token_string[input_token] << " token deleted & parse continued\n";
     //everything else that can't go to epsilon
     else
-        std::cout << "ERROR: Found " << token_string[input_token] << " token in " + method_name + ". " << token_string[input_token] << " is not in the first-set of " + method_name + " & " + method_name + " cannot go to epsilon. " << token_string[input_token] << " token deleted & continued parse\n";
+        std::cout << "ERROR: Found " << token_string[input_token] << " token in " + method_name + ". " << token_string[input_token] << " is not in the first-set of " + method_name + " & " + method_name + " cannot go to epsilon. " << token_string[input_token] << " token deleted & parse continued\n";
     //scan in next token, effectively deleting the current token
     input_token = scan();
 }
 
 void match_error(std::string inserted_token, std::string inserted_terminal) {
     //print error message with specific information about what was inserted to move forward
-    std::cout << "ERROR: Expected an " + inserted_token + " token, found " << token_string[input_token] << " token instead. Inserted \"" + inserted_terminal + "\" & continued parse\n";
+    std::cout << "ERROR: Expected an " + inserted_token + " token, found " << token_string[input_token] << " token instead. Inserted \"" + inserted_terminal + "\" & parse continued\n";
 }
 
 
@@ -228,81 +237,77 @@ std::string program() {
             P += ")\n";//end of the syntax tree
             break;
         default:
-            parse_error("PROGRAM");
-            program();
+            parse_error("PROGRAM");//read next token
+            program();//attempt to parse program again (eventually will hit eof and will return an empty program "(program)")
     }
     return P;
 }
 
+//statement list character "SL" non-terminal
 std::string stmt_list(token cs_follow[]) {
     std::string SL = " (";
     try {
         switch (input_token) {
-            //in first
+            //in first of statement list (== first of statement)
             case t_id:
             case t_read:
             case t_if:
             case t_while:
             case t_write:
-                SL += stmt(concat(first_stmt_list, cs_follow));
-                SL += stmt_list(cs_follow) + ")";
+                SL += stmt(concat(first_stmt_list, cs_follow));//parse statement
+                SL += stmt_list(cs_follow) + ")";//
                 return SL;
-            //not in first
-            default:
+            default://not in first, throw error
                 throw(1);
         }
     }
-    //catch error
     catch(int e) {
-        while(1) {
-            //check in follow (can be context sensative)
+        while(1) {//catch error, read until token in SL first set or context sensitive follow set
+            //if in context sensitive follow set, treat like an epsilon
             if(find(input_token, cs_follow))
                 return "";
             
-            //if not in first and follow (as checked in the try block)
+            //if not in first and follow (as checked in the try block) error + read next token
             parse_error("STMT_LIST");
 
-            //check if in first
+            //if new token in first set, attempt parse statement list again
             if(find(input_token, first_stmt_list))
                 return stmt_list(cs_follow);
         }
     }
 }
 
+//statement character "S" non-terminal
 std::string stmt(token cs_follow[]) {
     std::string S;
     switch (input_token) {
-        case t_id:
+        case t_id://S -> id := E
             S = match(t_id);
-            S = match(t_gets) + " " + S + " ";
+            S = match(t_gets) + " " + S + " ";//gets can be inserted
             S += expr(cs_follow);
             return S;
-        case t_read:
+        case t_read://S -> read id
             S = match(t_read) + " ";
-            S += match(t_id); //what id is inserted when id fails?  last id seen? if none?
+            S += match(t_id);//id can be inserted as MISSING_ID
             return S;
-        case t_write:
+        case t_write://S -> write E
             S = match(t_write) + " ";
             S += expr(cs_follow);
             return S;
         case t_if:
-            S = match(t_if) + " ";
-            S += cmpr(first_stmt_list);
-            S += stmt_list(end_and_eof);
-            match(t_end);
-            return S;
         case t_while:
-            S = match(t_while) + " ";
-            S += cmpr(first_stmt_list);
-            S += stmt_list(end_and_eof); 
-            match(t_end);
+            S = match(input_token) + " ";//match if or while
+            S += cmpr(first_stmt_list);//parse comparison
+            S += stmt_list(end_and_eof);//parse statement list with new context sensitive follow set
+            match(t_end);//match end, including eof in the context sensitive follow set allows end to be inserted
             return S;
-        default:
+        default://throw error
             throw(1);
-            return "";
+            return "";//purely to surpress a warning (will never reach)
     }
 }
 
+//comparison character "C" non-terminal
 std::string cmpr(token cs_follow[]) {
     std::string C;
     try {
@@ -310,16 +315,18 @@ std::string cmpr(token cs_follow[]) {
             case t_id:
             case t_literal:
             case t_lparen:
-                C = expr(concat(first_rel_op, only_eof));
-                C = "(" + rel_op() + C + " ";
-                C += expr(cs_follow) + ")";
+                C = expr(concat(first_rel_op, only_eof));//parse expression with newly constructed context sensitive follow set
+                C = "(" + rel_op() + C + " ";//parse relative op
+                C += expr(cs_follow) + ")";//parse expression with supplied context sensitive follow set
                 return C;
-            default: 
+            default://throw error
                 throw(1);
         }
     }
     catch(int e) {
-        while(1) {
+        while(1) {//if fail, read tokens until end of file or token in first of comparison
+            if(input_token == t_eof)
+                eof_error(t_error, "", "CMPR");
             parse_error("CMPR");
             if(find(input_token, first_cmpr))
                 return cmpr(cs_follow);
@@ -327,6 +334,7 @@ std::string cmpr(token cs_follow[]) {
     }
 }
 
+//expression character "E" non-terminal
 std::string expr(token cs_follow[]) {
     std::string E;
     try {
@@ -334,17 +342,20 @@ std::string expr(token cs_follow[]) {
             case t_id:
             case t_literal:
             case t_lparen:
-                E = term(concat(first_term_tail, cs_follow));
-                if(input_token ==  t_eof)
+                E = term(concat(first_term_tail, cs_follow));//parse term with modified context sensitive follow set
+                if(input_token == t_eof)//if at the end of file after term, return the parsed term
                     return E;
+                //otherwise parse term_tail
                 E = term_tail(E, cs_follow);
                 return E;
-            default:
+            default://throw error
                 throw(1);
         }
     }
     catch (int e) {
-        while(1) {
+        while(1) {//if fails, delete tokens until token in first set of expr seen or end of files
+            if(input_token == t_eof)
+                eof_error(t_error, "", "EXPR");
             parse_error("EXPR");
             if(find(input_token, first_expr))
                 return expr(cs_follow);
@@ -352,24 +363,26 @@ std::string expr(token cs_follow[]) {
     }
 }
 
+//term-tail character "TT" non-terminal
 std::string term_tail(std::string Term, token cs_follow[]) {
     std::string TT;
     try {
         switch (input_token) {
             case t_add:
             case t_sub:
-                TT = "(" + add_op() + Term + " ";
-                if(input_token == t_eof)
+                TT = "(" + add_op() + Term + " ";//parse add op
+                if(input_token == t_eof)//if at the end of file after add_op, return the passed term
                     return Term;
-                TT += term(concat(first_term_tail, cs_follow)) + ")";
+                //otherwise, parse term and term_tail
+                TT += term(concat(first_term_tail, cs_follow)) + ")";//parse term with modified context sensitive follow set
                 TT = term_tail(TT, cs_follow);
                 return TT;
-            default:
+            default://throw error
                 throw(1);
         }
     }
     catch (int e) {
-        while(1) {
+        while(1) {//if fails, delete tokens until token in first set of term_tail is seen or find token in the context sensitive follow set
             if(find(input_token, cs_follow))
                 return Term;
 
@@ -381,6 +394,7 @@ std::string term_tail(std::string Term, token cs_follow[]) {
     }
 }
 
+//term character "T" non-terminal
 std::string term(token cs_follow[]) {
     std::string T;
     try {
@@ -388,17 +402,20 @@ std::string term(token cs_follow[]) {
             case t_id:
             case t_literal:
             case t_lparen:
-                T = factor(concat(first_factor_tail, cs_follow));
-                if(input_token == t_eof)
+                T = factor(concat(first_factor_tail, cs_follow));//parse factor and modify context sensitive follow set
+                if(input_token == t_eof)//if at the end of file, return just the factor
                     return T;
+                //otherwise, parse factor tail and return result
                 T = factor_tail(T, cs_follow);
                 return T;
-            default:
+            default://throw error
                 throw(1);
         }
     }
     catch (int e) {
-        while(1) {
+        while(1) {//if fails, delete tokens until token in first set of term is seen or end of file
+            if(input_token == t_eof)
+                eof_error(t_error, "", "TERM");
             parse_error("TERM");
             if(find(input_token, first_term))
                 return term(cs_follow);
@@ -406,6 +423,7 @@ std::string term(token cs_follow[]) {
     }
 }
 
+//factor-tail character "FT" non-terminal
 std::string factor_tail(std::string Factor, token cs_follow[]) {
     std::string FT;
     try {
@@ -415,7 +433,7 @@ std::string factor_tail(std::string Factor, token cs_follow[]) {
                 FT = "(" + mul_op() + Factor + " ";//match multiplicative operator
                 if(input_token == t_eof)//if now at end of file, dangling multiplicative operator, return passed Factor string
                     return Factor;
-                //otherwise 
+                //otherwise parse factor and factor tail with updated context sensitive follow sets
                 FT += factor(concat(first_factor_tail, cs_follow)) + ")";
                 FT = factor_tail(FT, cs_follow);
                 return FT;
@@ -423,13 +441,11 @@ std::string factor_tail(std::string Factor, token cs_follow[]) {
                 throw(1);//throw error
         }
     }
-    catch (int e) {
+    catch (int e) {//error case, delete tokens until token in first of factor_tail found or token in context sensitive follow set found
         while(1) {
             if(find(input_token, cs_follow))
                 return Factor;
-
             parse_error("FACTOR_TAIL");
-
             if(find(input_token, first_factor_tail))
                 return factor_tail(Factor, cs_follow);
         }
@@ -449,8 +465,10 @@ std::string factor(token cs_follow[]) {
             F = expr(rparen_and_eof);
             match(t_rparen);
             return F;
-        default://if fails, delete tokens until token in first set of factor is seen
+        default://if fails, delete tokens until token in first set of factor is seen or end of file
             while(1) {
+                if(input_token == t_eof)
+                    eof_error(t_error, "", "FACTOR");
                 parse_error("FACTOR");//error message
                 if(find(input_token, first_factor))
                     return factor(cs_follow);
