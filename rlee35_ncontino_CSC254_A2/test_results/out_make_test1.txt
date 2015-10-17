@@ -1,0 +1,45 @@
+./parse < ./tests/test10.txt
+(program (while (> 2 3) (:= i (+ (+ (+ (+ 2 2) 2) (* 3 5)) 2))))
+./parse < ./tests/test11.txt
+PARSE ERROR: Found t_end token in PROGRAM. t_end is not in the first-set of PROGRAM & PROGRAM cannot go to epsilon. t_end token deleted & parse continued
+(program./parse < ./tests/test12.txt
+(program (:= i 6 (while (> i 3) (:= i (- i 2)))))
+./parse < ./tests/test13.txt
+(program (read i (read b (:= b 5 (:= i b (if (>= b i) (:= i (+ b 1))))))))
+./parse < ./tests/test14.txt
+(program (if (> 2 3) (:= i 2)))
+./parse < ./tests/test15.txt
+(program (if (> 2 3) (:= i 2) (:= id 12 (:= id 12 (:= id 12 (:= id 12 (:= id 12 (:= id 12 (:= id 12 (:= id 12))))))))))
+./parse < ./tests/test16.txt
+(program (if (> 2 3) (:= i 2) (read x (read x (write 12 (write 12 (if (< Y 3) (:= Y 3) (if (< Y 3) (:= Y 3) (if (< Y 3) (:= Y 3))))))))))
+./parse < ./tests/test17.txt
+(program (if (> 2 3) (:= i 2 (while (< Y 3) (:= Y (+ Y 1)) (while (< Y 3) (:= Y (+ Y 1)) (while (< Y 3) (:= Y (+ Y 1)) (while (< Y 3) (:= Y (+ Y 1)))))))))
+./parse < ./tests/test18.txt
+PARSE ERROR: Found t_while token in FACTOR_TAIL. t_while is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_while token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_less token in FACTOR_TAIL. t_less is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_less token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_gets token in FACTOR_TAIL. t_gets is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_gets token deleted & parse continued
+PARSE ERROR: Found t_lparen token in FACTOR_TAIL. t_lparen is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_lparen token deleted & parse continued
+PARSE ERROR: Found t_lparen token in FACTOR_TAIL. t_lparen is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_lparen token deleted & parse continued
+PARSE ERROR: Found t_lparen token in FACTOR_TAIL. t_lparen is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_lparen token deleted & parse continued
+PARSE ERROR: Found t_lparen token in FACTOR_TAIL. t_lparen is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_lparen token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_rparen token in FACTOR_TAIL. t_rparen is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in STMT_LIST. t_rparen is not in the first-set of STMT_LIST & is not in the context-sensitive follow-set. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in STMT_LIST. t_rparen is not in the first-set of STMT_LIST & is not in the context-sensitive follow-set. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in STMT_LIST. t_rparen is not in the first-set of STMT_LIST & is not in the context-sensitive follow-set. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_end token in STMT_LIST. t_end is not in the first-set of STMT_LIST & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+(program (if (> 2 3) (:= i 2 (while (< Y 3) (:= Y (+ (+ Y 1) 1))))))
+./parse < ./tests/test19.txt
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_greater token in FACTOR_TAIL. t_greater is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_greater token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_lparen token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_notequals token in FACTOR_TAIL. t_notequals is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_notequals token deleted & parse continued
+PARSE ERROR: Found t_lparen token in FACTOR_TAIL. t_lparen is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_lparen token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_rparen token in FACTOR_TAIL. t_rparen is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+(program (if (!= d 12) (:= d 12) (:= d 10 (write d (:= i 2 (:=  eif d (:= d 12 (:= d 10 (write dnd (if (!= d 12) (:= d 12) (:= d 10 (write d))))))))))))

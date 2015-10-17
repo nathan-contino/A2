@@ -1,0 +1,25 @@
+   read n
+   cp := 2
+          := 0
+       cf1 := 2
+       c   f  1  s :    =   cf1 * cf1
+       w  hi  le      1s <= cp
+           cf2 :   =  2
+           pr : = cf1 * cf2
+           while pr <= c p
+               if  pr  == cp
+                   found := 1
+               end
+               cf2 := cf2 + 1
+               pr := c f1 * cf2
+           end
+           cf1 := cf1 + 1
+           cf1s :=  cf1 * cf1
+       end
+       if fo und  =!= 0
+           wri te  c p
+           n := n - 1
+       en d  
+       cp : = c p +          1    
+   end  
+   $$

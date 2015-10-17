@@ -1,0 +1,2 @@
+if (d) != (12) d := 12 end d := 10 write d 2 > 3 i := 2 eif (d) != (12) d := 12 end d := 10 write dnd
+if (d) != (12) d := 12 end d := 10 write d

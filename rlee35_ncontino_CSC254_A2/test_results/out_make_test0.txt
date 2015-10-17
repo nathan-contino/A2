@@ -1,0 +1,20 @@
+./parse < ./tests/test00.txt
+(program)
+./parse < ./tests/test01.txt
+(program (:= id 12))
+./parse < ./tests/test02.txt
+(program (read x))
+./parse < ./tests/test03.txt
+(program (write 12))
+./parse < ./tests/test04.txt
+(program (if (< Y 3) (:= Y 3)))
+./parse < ./tests/test05.txt
+(program (while (< Y 3) (:= Y (+ Y 1))))
+./parse < ./tests/test06.txt
+(program (while (< Y 3) (:= Y (+ Y 1))))
+./parse < ./tests/test07.txt
+(program (while (<= Y 3) (:= Y (+ (+ (* (* (+ Y 1) 1) 2) 1) 3))))
+./parse < ./tests/test08.txt
+(program (if (!= d 12) (:= d 12) (:= d 10 (write d))))
+./parse < ./tests/test09.txt
+(program (read n (:= cp 2 (while (> n 0) (:= found 0 (:= cf1 2 (:= cf1s (* cf1 cf1) (while (<= cf1s cp) (:= cf2 2 (:= pr (* cf1 cf2) (while (<= pr cp) (if (== pr cp) (:= found 1) (:= cf2 (+ cf2 1) (:= pr (* cf1 cf2)))) (:= cf1 (+ cf1 1) (:= cf1s (* cf1 cf1)))))) (if (== found 0) (write cp (:= n (- n 1))) (:= cp (+ cp 1)))))))))))

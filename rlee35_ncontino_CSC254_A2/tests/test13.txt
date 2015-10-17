@@ -1,0 +1,1 @@
+read i read b b := 5 i := b if b >= i i := b + 1 end

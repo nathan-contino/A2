@@ -1,0 +1,26 @@
+   read +
+   cp := 2
+   while + > 0
+       fou+d := 0
+       cf1 := 2
+       cf1s := cf1 * cf1
+       while cf1s <= cp
+           cf2 := 2
+           pr := cf1 * cf2
+           while pr <= cp
+               if pr == cp
+                   fou+d := 1
+               e+d
+               cf2 := cf2 + 1
+               pr := cf1 * cf2
+           e+d
+           cf1 := cf1 + 1
+           cf1s := cf1 * cf1
+       e+d
+       if fou+d == 0
+           write cp
+           + := + - 1
+       e+d
+       cp := cp + 1
+   e+d
+   $$

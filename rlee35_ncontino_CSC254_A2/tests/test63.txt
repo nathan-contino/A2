@@ -1,0 +1,23 @@
+   read n
+   cp :()S(IUD)(GJSIOPFSD{
+   P{OL= 2
+a       found := 0
+       cf1 := 2
+       cf1s := cf1 * cf1
+       while cf1s <= cp
+           asdf := 2
+           pr := cf1 * cf2
+           while pr <= cpadfasdfasd
+               if pr == cp
+                   found := 1
+               end
+               cf2 := cf2 + 1
+               pr := cf1 * cf2
+           end
+sdfasdf           cf1asdfs := cf1 * cf1
+       end
+       if found == 0
+           write cp
+           n := n - 1
+asdf       cp := cp + 1
+   end

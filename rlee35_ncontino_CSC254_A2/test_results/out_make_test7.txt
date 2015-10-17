@@ -1,0 +1,147 @@
+./parse < ./tests/test70.txt
+PARSE ERROR: Found t_mul token in TERM. t_mul is not in the first-set of TERM & TERM cannot go to epsilon. t_mul token deleted & parse continued
+PARSE ERROR: Found t_mul token in TERM. t_mul is not in the first-set of TERM & TERM cannot go to epsilon. t_mul token deleted & parse continued
+EOF ERROR: Found t_eof after t_add. Deleted dangling "+" operator in TERM_TAIL and parse continued
+(program (:= id (+ (+ (+ (+ 5 5) 5) 5) 5)))
+./parse < ./tests/test71.txt
+PARSE ERROR: Found t_div token in FACTOR. t_div is not in the first-set of FACTOR & FACTOR cannot go to epsilon. t_div token deleted & parse continued
+PARSE ERROR: Found t_div token in FACTOR. t_div is not in the first-set of FACTOR & FACTOR cannot go to epsilon. t_div token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+(program (:= id (+ (+ 5 5) (/ 5 5))))
+./parse < ./tests/test72.txt
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+MATCH ERROR: Expected an id token, found t_eof token instead. Inserted "ID_MISSING" & parse continued
+MATCH ERROR: Expected an t_end token, found t_eof token instead. Inserted "end" & parse continued
+(program (while (<= 9 id) (read ID_MISSING)))
+./parse < ./tests/test73.txt
+PARSE ERROR: Found t_end token in STMT_LIST. t_end is not in the first-set of STMT_LIST & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+(program (read ap))
+./parse < ./tests/test74.txt
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_sub token in TERM. t_sub is not in the first-set of TERM & TERM cannot go to epsilon. t_sub token deleted & parse continued
+PARSE ERROR: Found t_sub token in TERM. t_sub is not in the first-set of TERM & TERM cannot go to epsilon. t_sub token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "::" found.  Deleted invalid token & continued parse
+PARSE ERROR: Found t_gets token in FACTOR_TAIL. t_gets is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_gets token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+MATCH ERROR: Expected an id token, found t_eof token instead. Inserted "ID_MISSING" & parse continued
+(program (write a (:=  a (+ (- (- (+ (+ 23 s) 4) a) 5) 234) (read ID_MISSING))))
+./parse < ./tests/test75.txt
+PARSE ERROR: Found t_add token in CMPR. t_add is not in the first-set of CMPR & CMPR cannot go to epsilon. t_add token deleted & parse continued
+PARSE ERROR: Found t_div token in CMPR. t_div is not in the first-set of CMPR & CMPR cannot go to epsilon. t_div token deleted & parse continued
+PARSE ERROR: Found t_mul token in CMPR. t_mul is not in the first-set of CMPR & CMPR cannot go to epsilon. t_mul token deleted & parse continued
+PARSE ERROR: Found t_notequals token in CMPR. t_notequals is not in the first-set of CMPR & CMPR cannot go to epsilon. t_notequals token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_div token in TERM. t_div is not in the first-set of TERM & TERM cannot go to epsilon. t_div token deleted & parse continued
+PARSE ERROR: Found t_mul token in TERM. t_mul is not in the first-set of TERM & TERM cannot go to epsilon. t_mul token deleted & parse continued
+PARSE ERROR: Found t_add token in TERM. t_add is not in the first-set of TERM & TERM cannot go to epsilon. t_add token deleted & parse continued
+PARSE ERROR: Found t_sub token in TERM. t_sub is not in the first-set of TERM & TERM cannot go to epsilon. t_sub token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_mul token in EXPR. t_mul is not in the first-set of EXPR & EXPR cannot go to epsilon. t_mul token deleted & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_end token, found t_eof token instead. Inserted "end" & parse continued
+(program (while (!= 1 (+ 10 98))))
+./parse < ./tests/test76.txt
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+PARSE ERROR: Found t_div token in FACTOR. t_div is not in the first-set of FACTOR & FACTOR cannot go to epsilon. t_div token deleted & parse continued
+PARSE ERROR: Found t_mul token in TERM. t_mul is not in the first-set of TERM & TERM cannot go to epsilon. t_mul token deleted & parse continued
+PARSE ERROR: Found t_div token in TERM. t_div is not in the first-set of TERM & TERM cannot go to epsilon. t_div token deleted & parse continued
+(program (while (!= (- id a) (- (+ (+ 21984 (* 8 65)) 5) q98endendendend))))
+./parse < ./tests/test77.txt
+PARSE ERROR: Found t_greaterequals token in CMPR. t_greaterequals is not in the first-set of CMPR & CMPR cannot go to epsilon. t_greaterequals token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+MATCH ERROR: Expected an t_end token, found t_eof token instead. Inserted "end" & parse continued
+(program (if (== 2345 r9824u)))
+./parse < ./tests/test78.txt
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_rparen token in EXPR. t_rparen is not in the first-set of EXPR & EXPR cannot go to epsilon. t_rparen token deleted & parse continued
+PARSE ERROR: Found t_lparen token in FACTOR_TAIL. t_lparen is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_lparen token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "=2" found.  Deleted invalid token & continued parse
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_gets token in FACTOR_TAIL. t_gets is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_gets token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+MATCH ERROR: Expected an t_rparen token, found t_eof token instead. Inserted ")" & parse continued
+(program (:= id (- A (* 0 A))))
+./parse < ./tests/test79.txt
+PARSE ERROR: Found t_lessequals token in CMPR. t_lessequals is not in the first-set of CMPR & CMPR cannot go to epsilon. t_lessequals token deleted & parse continued
+PARSE ERROR: Found t_notequals token in CMPR. t_notequals is not in the first-set of CMPR & CMPR cannot go to epsilon. t_notequals token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, ">>" found.  Deleted invalid token & continued parse
+PARSE ERROR: Found t_greater token in CMPR. t_greater is not in the first-set of CMPR & CMPR cannot go to epsilon. t_greater token deleted & parse continued
+PARSE ERROR: Found t_greater token in FACTOR_TAIL. t_greater is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_greater token deleted & parse continued
+PARSE ERROR: Found t_greater token in FACTOR_TAIL. t_greater is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_greater token deleted & parse continued
+MATCH ERROR: Expected an t_end token, found t_eof token instead. Inserted "end" & parse continued
+(program (while (> 123 a)))

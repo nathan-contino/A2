@@ -1,0 +1,122 @@
+./parse < ./tests/test40.txt
+PARSE ERROR: Found t_if token in CMPR. t_if is not in the first-set of CMPR & CMPR cannot go to epsilon. t_if token deleted & parse continued
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+(program (read n (:= cp 2 (while (> n 0) (:= found 0 (:= cf1 2 (:= cf1s (* cf1 cf1) (while (<= cf1s cp) (:= cf2 2 (:= pr (* cf1 cf2) (while (== pr cp) (:= found 1) (:= cf2 (+ cf2 1) (:= pr (* cf1 cf2)))))) (:= cf1 (+ cf1 1) (:= cf1s (* cf1 cf1))))))) (if (== found 0) (write cp (:= n (- n 1))) (:= cp (+ cp 1)))))))
+./parse < ./tests/test41.txt
+TOKEN ERROR: Invalid token syntax, "\" found.  Deleted invalid token & continued parse
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+(program (read n (:= cp 2 (while (> n 0) (:= found 0 (:= cf1 2 (:= cf1s (* cf1 cf1) (while (<= cf1s cp) (:= cf2 2 (:= pr (* cf1 cf2) (while (<= pr cp) (if (== pr cp) (:= found 1) (:= cf2 (+ cf2 1) (:= pr (* cf1 cf2)))) (:= cf1 (+ cf1 1) (:= cf1s (* cf1 cf1)))))) (write cp (:= n (- n 1))))))) (:= cp (+ cp 1))))))
+./parse < ./tests/test42.txt
+PARSE ERROR: Found t_while token in EXPR. t_while is not in the first-set of EXPR & EXPR cannot go to epsilon. t_while token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+MATCH ERROR: Expected an t_gets token, found t_if token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_if token in EXPR. t_if is not in the first-set of EXPR & EXPR cannot go to epsilon. t_if token deleted & parse continued
+PARSE ERROR: Found t_equals token in FACTOR_TAIL. t_equals is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_equals token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_id token instead. Inserted ":=" & parse continued
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+MATCH ERROR: Expected an t_gets token, found t_id token instead. Inserted ":=" & parse continued
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+MATCH ERROR: Expected an t_gets token, found t_id token instead. Inserted ":=" & parse continued
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+MATCH ERROR: Expected an t_gets token, found t_id token instead. Inserted ":=" & parse continued
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+MATCH ERROR: Expected an t_gets token, found t_id token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+(program (read n (:= cp 2 (while (> n 0) (:= found 0 (:= cf1 2 (:= cf1s (* cf1 cf1) (while (<= cf1s cp) (:= cf2 2 (:= pr pr (:=  cp pr (:=  cp found)))) (:=  cf2 (+ cf2 1) (:=  pr (* cf1 cf2))))))) (:=  cf1 (+ cf1 1) (:=  cf1s (* cf1 cf1) (write cp (:= n (- n 1) (:= cp (+ cp 1))))))))))
+./parse < ./tests/test43.txt
+PARSE ERROR: Found t_gets token in FACTOR_TAIL. t_gets is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_gets token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_id token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_gets token in FACTOR_TAIL. t_gets is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_gets token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_mul token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_mul token in EXPR. t_mul is not in the first-set of EXPR & EXPR cannot go to epsilon. t_mul token deleted & parse continued
+PARSE ERROR: Found t_gets token in FACTOR_TAIL. t_gets is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_gets token deleted & parse continued
+PARSE ERROR: Found t_literal token in FACTOR_TAIL. t_literal is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_literal token deleted & parse continued
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_gets token in FACTOR_TAIL. t_gets is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_gets token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_gets token in FACTOR_TAIL. t_gets is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_gets token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_gets token in FACTOR_TAIL. t_gets is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_gets token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_gets token in FACTOR_TAIL. t_gets is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_gets token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+PARSE ERROR: Found t_if token in FACTOR_TAIL. t_if is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_if token deleted & parse continued
+PARSE ERROR: Found t_id token in FACTOR_TAIL. t_id is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_id token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+MATCH ERROR: Expected an t_end token, found t_eof token instead. Inserted "end" & parse continued
+MATCH ERROR: Expected an t_end token, found t_eof token instead. Inserted "end" & parse continued
+(program (read n (:= cp 2 (while (> n 0) (:= found 0 (:= cf1s (* cf1 cf1) (while (<= cf1s cp) (:=  cf2 pr (:=  cf1 cf2 (while (<= pr cp) (if (== (+ (+ found (* 1 cf2)) (* 1 cf1)) 0) (write cp (:= n (- n 1))) (:= cp (+ cp 1)))))))))))))
+./parse < ./tests/test44.txt
+MATCH ERROR: Expected an t_end token, found t_eof token instead. Inserted "end" & parse continued
+MATCH ERROR: Expected an t_end token, found t_eof token instead. Inserted "end" & parse continued
+MATCH ERROR: Expected an t_end token, found t_eof token instead. Inserted "end" & parse continued
+MATCH ERROR: Expected an t_end token, found t_eof token instead. Inserted "end" & parse continued
+(program (read n (:= cp 2 (while (> n 0) (:= found 0 (:= cf1 2 (:= cf1s (* cf1 cf1) (while (<= cf1s cp) (:= cf2 2 (:= pr (* cf1 cf2) (while (<= pr cp) (if (== pr cp) (:= found 1)))))))))))))
+./parse < ./tests/test45.txt
+TOKEN ERROR: Invalid token syntax, "= " found.  Deleted invalid token & continued parse
+MATCH ERROR: Expected an t_gets token, found t_mul token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_mul token in EXPR. t_mul is not in the first-set of EXPR & EXPR cannot go to epsilon. t_mul token deleted & parse continued
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+(program (read n (:= cp 2 (while (> n 0) (:= found 0 (:= cf1 2 (:= cf1s (* cf1 cf1) (while (<= cf1s cp) (:= cf2 2 (:= pr (* cf1 cf2) (:=  cf1 cf2))) (:= cf1 (+ cf1 1) (:= cf1s (* cf1 cf1))))))) (if (== found 0) (write cp (:= n (- n 1))) (:= cp (+ cp 1)))))))
+./parse < ./tests/test46.txt
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+(program (read n (:= cp 2 (while (> n 0) (:= found 0 (:= cf1 2 (:= cf1s (* cf1 cf1) (while (<= cf1s cp) (:= cf2 2 (:= pr (* cf1 cf2) (while (<= pr cp) (:= found 1) (:= cf2 (+ cf2 1) (:= pr (* cf1 cf2)))))) (:= cf1 (+ cf1 1) (:= cf1s (* cf1 cf1))))))) (if (== found 0) (write cp (:= n (- n 1))) (:= cp (+ cp 1)))))))
+./parse < ./tests/test47.txt
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+(program (read n (:= cp 2 (while (> n 0) (:= found 0 (:= cf1 2 (:= cf1s (* cf1 cf1) (while (<= cf1s cp) (if (== found 0) (write cp (:= n (- n 1))) (:= cp (+ cp 1)))))))))))
+./parse < ./tests/test48.txt
+PARSE ERROR: Found t_end token in FACTOR_TAIL. t_end is not in the first-set of FACTOR_TAIL & is not in the context-sensitive follow-set. t_end token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+(program (read n (:= cp 2 (while (> n 0) (:= cf2 2 (:= pr (* cf1 cf2) (while (<= pr cp) (if (== pr cp) (:= found 1) (:= cf2 (+ cf2 1) (:= pr (* cf1 cf2)))) (:= cf1 (+ cf1 1) (:= cf1s (* cf1 cf1)))))) (if (== found 0) (write cp (:= n (- n 1))) (:= cp (+ cp 1)))))))
+./parse < ./tests/test49.txt
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+MATCH ERROR: Expected an t_gets token, found t_add token instead. Inserted ":=" & parse continued
+PARSE ERROR: Found t_add token in EXPR. t_add is not in the first-set of EXPR & EXPR cannot go to epsilon. t_add token deleted & parse continued
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+TOKEN ERROR: Invalid token syntax, "$" found.  Deleted invalid token & continued parse
+(program (read n (:=  cp 2 (while (> n (+ (+ 0 found) 0)) (:=  cf1 2 (:=  cf1s (* cf1 cf1) (while (<= cf1s cp) (:=  cf2 2 (:=  pr (* cf1 cf2) (while (<= pr cp) (if (== pr cp) (:=  found 1) (:=  cf2 (+ cf2 1) (:=  pr (* cf1 cf2)))) (:=  cf1 (+ cf1 1) (:=  cf1s (* cf1 cf1)))))) (if (== found 0) (write cp (:=  n (- n 1))) (:=  cp (+ cp 1))))))))))

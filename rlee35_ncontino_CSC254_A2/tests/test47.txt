@@ -1,0 +1,16 @@
+   read n
+   cp := 2
+   while n > 0
+       found := 0
+       cf1 := 2
+       cf1s := cf1 * cf1
+       while cf1s <= cp
+           
+       end
+       if found == 0
+           write cp
+           n := n - 1
+       end
+       cp := cp + 1
+   end
+   $$
